@@ -20,8 +20,16 @@ describe('route', () => {
     expect(route('/parent', null, [])).toEqual({ page: 'parent', root: null });
   });
 
-  it('opens the most recent stored kid on /', () => {
-    expect(route('/', null, [{ id: 'a', key: KEY_TEXT, name: 'Léa' }, { id: 'b', key: KEY_TEXT, name: 'Tom' }])).toMatchObject({ page: 'kid', id: 'a' });
+  it('opens the only stored kid on /', () => {
+    expect(route('/', null, [{ id: 'a', key: KEY_TEXT, name: 'Léa' }])).toMatchObject({ page: 'kid', id: 'a' });
+  });
+
+  it('shows the kid picker on / when several kids are stored (SPEC §10.3)', () => {
+    expect(route('/', null, [{ id: 'a', key: KEY_TEXT, name: 'Léa' }, { id: 'b', key: KEY_TEXT, name: 'Tom' }])).toEqual({ page: 'picker' });
+  });
+
+  it('has the privacy page', () => {
+    expect(route('/confidentialite', null, [])).toEqual({ page: 'privacy' });
   });
 
   it('skips a stored kid with a damaged key', () => {
@@ -30,6 +38,7 @@ describe('route', () => {
 
   it('never reaches the parent app from stored kids', () => {
     expect(route('/', null, [{ id: 'a', key: KEY_TEXT, name: 'Léa' }]).page).toBe('kid');
+    expect(route('/', null, [{ id: 'a', key: KEY_TEXT, name: 'Léa' }, { id: 'b', key: KEY_TEXT, name: 'Tom' }]).page).toBe('picker');
     expect(route('/parent', null, [{ id: 'a', key: KEY_TEXT, name: 'Léa' }]).page).toBe('parent');
   });
 

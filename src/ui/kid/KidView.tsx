@@ -1,12 +1,16 @@
 // Page: one kid's read-only bank. No buttons that change data (SPEC §8).
 import { useEffect } from 'preact/hooks';
 import { useI18n } from '../../i18n';
+import { getKids } from '../../store/device';
+import { useNav } from '../nav';
 import { KidScreen } from './KidScreen';
 import { useKidBank } from './useKidBank';
 
 export default function KidView({ id, rawKey, remember }: { id: string; rawKey: Uint8Array; remember: boolean }) {
   const { t } = useI18n();
   const state = useKidBank(id, rawKey, remember);
+  const go = useNav();
+  const several = remember && getKids().length > 1;
 
   useEffect(() => {
     document.title = state.status === 'ready' ? t.kid.title(state.doc.kid.name) : t.app.name;
@@ -25,6 +29,6 @@ export default function KidView({ id, rawKey, remember }: { id: string; rawKey: 
         </main>
       );
     case 'ready':
-      return <KidScreen doc={state.doc} today={state.today} staleSince={state.staleSince} />;
+      return <KidScreen doc={state.doc} today={state.today} staleSince={state.staleSince} onSwitchKid={several ? () => go({ page: 'picker' }) : undefined} />;
   }
 }

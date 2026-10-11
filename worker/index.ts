@@ -10,6 +10,8 @@ const ROUTES: [RegExp, Partial<Record<string, Handler>>][] = [
   [/^\/api\/v1\/blobs$/, { POST: (req, env) => createBlob(req, env) }],
   [/^\/api\/v1\/blobs\/([^/]+)$/, { GET: (_, env, id) => getBlob(env, id), PUT: putBlob, DELETE: deleteBlob }],
   [/^\/api\/v1\/invites$/, { POST: (req, env) => mintInvite(req, env) }],
+  // Public facts about this instance, for the privacy page. Nothing about any family.
+  [/^\/api\/v1\/instance$/, { GET: async (_, env) => json(200, { contact: env.INSTANCE_CONTACT?.trim() || null }) }],
 ];
 
 export async function handle(req: Request, env: Env): Promise<Response> {

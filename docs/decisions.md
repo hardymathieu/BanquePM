@@ -124,3 +124,17 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
 - **Refused, with the file line number:** an unreadable date such as `31/02/2025`, an unreadable amount, or a future date. A ledger that would go below zero is refused too, with the date and what was there: every later edit would otherwise hit the overdraft rule.
 - **Summary** worded as in SPEC §12, plus "Le livret commence le …", a note that comments become private notes, and a hint that pending days can all be marked kept at once. Pocket money, weekday and rate can be adjusted and the summary updates live (they decide which rows are coins).
 - **Name and birthday** come from the form; `ledgerStart` is the sheet's first date. Imported move ids are random, like any move.
+
+## PWA, privacy page, README (milestone 9)
+
+- **`GET /api/v1/instance`** returns `{ contact }` from the optional `INSTANCE_CONTACT`. It is additive (v1 stays compatible) and says nothing about any family.
+- **Kid picker.** `/` with two or more remembered kids shows big name buttons, most recently opened first. The kid view then offers "Changer d'enfant". Nothing on these screens leads to `/parent` (checked by e2e).
+- **Manifest.** Name "Banque de papa et maman", `short_name` "Ma banque" (the full name is cut off under a home-screen icon), `start_url` `/`, standalone, brand blue. Icons are drawn as SVG in `scripts/icons.mjs` and rendered to PNG with Playwright's Chromium (`npm run icons`): 192, 512, maskable 512 with the coin inside the safe zone, the Apple touch icon, and an SVG favicon.
+- **Service worker.** `sw.js` is generated at build time by a small Vite plugin, with the exact list of built files (minus `.woff`, since these browsers all take `woff2`) and a version hash of that list.
+  - Install precaches everything and takes over at once; activation deletes older caches.
+  - Navigations are network-first, falling back to the cached app shell `/`. Static files are cache-first.
+  - **`/api/*` is never touched**, so no data or ciphertext ever sits in the service worker's cache (checked by e2e). The kid view keeps its own encrypted copy, as before.
+  - Not registered in `npm run dev`. `sw.js` is served with `Cache-Control: no-cache`, so updates reach every phone.
+  - The offline e2e test (SPEC §16 E2E 3) fails when registration is removed, so it measures the real thing.
+- **Privacy page** (`/confidentialite`): every point of SPEC §14, plus "Sur ce téléphone" (what `localStorage` holds and how to erase it) and a link to the source code. It is linked from the landing page, kid view, picker and parent home.
+- **README** (French, then English): what it is, the privacy promise, the Deploy to Cloudflare button, `ADMIN_TOKEN`, first steps via `/admin`, `INSTANCE_CONTACT`, updating by syncing the fork, and development. `package.json` → `cloudflare.bindings` describes `ADMIN_TOKEN` and `DB` in the Deploy form. `wrangler deploy --dry-run` passes (12.7 KiB Worker). The button itself still has to be tried once in a real Cloudflare account.

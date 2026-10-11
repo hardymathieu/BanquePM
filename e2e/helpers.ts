@@ -3,7 +3,7 @@ import { E2E_ADMIN_TOKEN } from '../playwright.config';
 import { createDemoBank } from '../scripts/demo';
 import { localToday } from '../src/ui/shared/today';
 
-export const demoBank = (baseURL: string) => createDemoBank(baseURL, E2E_ADMIN_TOKEN, localToday());
+export const demoBank = (baseURL: string, name = 'Léa') => createDemoBank(baseURL, E2E_ADMIN_TOKEN, localToday(), name);
 
 /** Records every request and console error, so a test can assert none left the origin. */
 export function watch(page: Page, baseURL: string) {

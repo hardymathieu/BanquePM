@@ -11,6 +11,7 @@ import { forgetDevice } from '../../store/device';
 import { AddKidSheet } from './AddKidSheet';
 import { BackupBanner } from './BackupBanner';
 import { useBackup } from './useBackup';
+import { PrivacyLink } from '../shared/PrivacyLink';
 import { CatchUp } from './CatchUp';
 import { History } from './History';
 import type { KidCtx } from './kidContext';
@@ -155,6 +156,8 @@ export function ParentHome({ family, session, save, revoke, act, reload }: Props
           </div>
         </>
       )}
+
+      <footer class="parent-footer"><PrivacyLink /></footer>
 
       {adding && (
         <AddKidSheet

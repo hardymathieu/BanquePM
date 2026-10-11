@@ -42,6 +42,7 @@ npm run seed         # creates the fictional demo bank ("Léa") on the dev serve
 npm run build        # vite build into dist/
 npm run deploy       # vite build + d1 migrations apply DB --remote + wrangler deploy
 npm run types        # regenerate worker-configuration.d.ts after changing wrangler.jsonc
+npm run icons        # re-render public/icons/*.png and favicon.svg from scripts/icons.mjs
 npm run e2e          # playwright against a production build in wrangler dev, 390×844, light + dark
 python3 fixtures/engine_reference.py   # prints the reference test vectors
 ```

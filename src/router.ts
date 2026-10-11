@@ -13,6 +13,9 @@ export type Route =
   | { page: 'create'; invite: string | null; adminToken?: string; fromBackup?: ExportFile }
   /** The offline viewer (SPEC §11): the file is read in the browser and kept in memory only. */
   | { page: 'backup'; file: ExportFile | null }
+  /** Several kids on one phone (SPEC §10.3). Never leads to the parent app. */
+  | { page: 'picker' }
+  | { page: 'privacy' }
   | { page: 'restore' }
   | { page: 'admin' }
   | { page: 'not-found' };
@@ -29,11 +32,14 @@ export function route(path: string, fragment: Fragment | null, storedKids: Store
   if (path === '/restaurer') return { page: 'restore' };
   if (path === '/admin') return { page: 'admin' };
   if (path === '/sauvegarde') return { page: 'backup', file: null };
+  if (path === '/confidentialite') return { page: 'privacy' };
   if (path !== '/') return { page: 'not-found' };
-  for (const kid of storedKids) {
+  const usable = storedKids.flatMap((kid) => {
     const key = fromBase64url(kid.key);
-    if (key?.length === 32) return { page: 'kid', id: kid.id, key, remember: true };
-  }
+    return key?.length === 32 ? [{ id: kid.id, key }] : [];
+  });
+  if (usable.length > 1) return { page: 'picker' };
+  if (usable[0]) return { page: 'kid', id: usable[0].id, key: usable[0].key, remember: true };
   return { page: 'landing' };
 }
 
@@ -45,5 +51,7 @@ export const PATHS: Record<Route['page'], string> = {
   restore: '/restaurer',
   admin: '/admin',
   backup: '/sauvegarde',
+  picker: '/',
+  privacy: '/confidentialite',
   'not-found': '/',
 };

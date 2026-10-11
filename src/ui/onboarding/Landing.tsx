@@ -5,6 +5,7 @@ import { useI18n } from '../../i18n';
 import { getParent } from '../../store/device';
 import { useNav } from '../nav';
 import { readJsonFile } from '../shared/files';
+import { PrivacyLink } from '../shared/PrivacyLink';
 
 export default function Landing() {
   const { t } = useI18n();
@@ -39,6 +40,7 @@ export default function Landing() {
         {bad && <p class="err" role="alert">{t.backup.notABackup}</p>}
       </div>
       <p class="hint">{t.landing.kidHint}</p>
+      <footer><PrivacyLink /></footer>
     </main>
   );
 }

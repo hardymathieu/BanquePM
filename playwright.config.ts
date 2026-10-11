@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 export const E2E_PORT = 8799;
 export const E2E_ADMIN_TOKEN = 'e2e-admin-token-0123456789-abcdefghijkl';
+export const E2E_CONTACT = 'banque@example.org';
 const persist = '.wrangler/e2e';
 
 export default defineConfig({
@@ -25,7 +26,7 @@ export default defineConfig({
     command: [
       'vite build',
       `wrangler d1 migrations apply DB --local --persist-to ${persist}`,
-      `wrangler dev --port ${E2E_PORT} --persist-to ${persist} --var ADMIN_TOKEN:${E2E_ADMIN_TOKEN}`,
+      `wrangler dev --port ${E2E_PORT} --persist-to ${persist} --var ADMIN_TOKEN:${E2E_ADMIN_TOKEN} --var INSTANCE_CONTACT:${E2E_CONTACT}`,
     ].join(' && '),
     url: `http://localhost:${E2E_PORT}/`,
     reuseExistingServer: false,

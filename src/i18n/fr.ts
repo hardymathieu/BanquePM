@@ -182,6 +182,41 @@ export const fr = {
     overdraft: (date: string, amount: string) =>
       `Le solde passe sous zéro le ${date} (il n'y avait que ${amount}). Corrige le tableau, puis réessaie.`,
   },
+  picker: {
+    title: 'Qui regarde sa banque ?',
+    unnamed: 'Enfant',
+  },
+  privacy: {
+    link: 'Confidentialité',
+    title: 'Confidentialité',
+    intro: "Cette banque est faite pour que la personne qui l'héberge ne puisse rien savoir de toi ni de tes enfants. Tout est chiffré sur ton téléphone avant d'être envoyé.",
+    storesTitle: 'Ce que le serveur garde',
+    stores: [
+      'Des identifiants tirés au hasard.',
+      "Des fichiers chiffrés qu'il ne peut pas ouvrir.",
+      'Un numéro de version par fichier.',
+      'Le mois du dernier changement de chaque fichier.',
+      "Quels fichiers d'enfants vont avec quel fichier de famille, donc le nombre d'enfants d'une famille.",
+      "Les codes d'invitation pas encore utilisés, sous forme d'empreinte.",
+    ],
+    notStoredTitle: "Ce qu'il ne garde pas",
+    notStored: 'Aucun prénom, aucun montant, aucune note, aucun e-mail, aucun mot de passe, aucune adresse IP, aucun journal.',
+    cloudflareTitle: 'Le rôle de Cloudflare',
+    cloudflare:
+      "Cloudflare transporte le trafic et voit donc passer les adresses IP, comme tout hébergeur. La personne qui héberge cette banque a coupé les journaux et les statistiques : elle ne peut pas les voir.",
+    recoveryTitle: 'Pas de récupération',
+    recovery:
+      "Tes 12 mots sont la seule clé. Si tu les perds avec ton lien parent, personne ne peut récupérer ta banque, pas même l'hébergeur. Garde aussi une sauvegarde.",
+    kidLinkTitle: "Ce que montre le lien d'un enfant",
+    kidLink:
+      "Toute personne qui a le lien d'un enfant peut voir son solde, son prénom, son anniversaire et les notes qui lui sont destinées. Jamais les notes privées. Si un lien a été partagé par erreur, crée un nouveau lien depuis l'espace parent.",
+    deviceTitle: 'Sur ce téléphone',
+    device:
+      "Ce téléphone garde ton lien parent si tu le demandes, les liens des enfants ouverts ici, et une copie chiffrée de leur banque pour l'afficher sans réseau. « Oublier cet appareil », dans les réglages de l'espace parent, efface tout.",
+    contactTitle: "Contact de l'hébergeur",
+    code: 'Le code est libre (licence MIT) :',
+    back: 'Retour',
+  },
   parent: {
     appTitle: 'Banque de papa et maman · espace parent',
     kidsGroup: 'Enfant',
@@ -389,6 +424,7 @@ export const fr = {
     revoked: "Ce lien n'est plus valable. Demande un nouveau lien à tes parents.",
     loadError: "Impossible d'ouvrir ta banque pour l'instant. Vérifie ta connexion et réessaie.",
     retry: 'Réessayer',
+    switchKid: "Changer d'enfant",
   },
 };
 

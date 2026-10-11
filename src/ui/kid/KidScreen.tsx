@@ -8,12 +8,22 @@ import { CoinGauge } from './CoinGauge';
 import { GhostChart } from './GhostChart';
 import { kidModel } from './model';
 import { Passbook } from './Passbook';
+import { PrivacyLink } from '../shared/PrivacyLink';
 import { centsText } from './text';
 
 const NOTHING_YET = 0.005;
 
 /** `embedded`: inside another page (the backup viewer), so not a second <main>. */
-export function KidScreen({ doc, today, staleSince, embedded = false }: { doc: KidPublicDoc; today: IsoDate; staleSince: IsoDate | null; embedded?: boolean }) {
+type Props = {
+  doc: KidPublicDoc;
+  today: IsoDate;
+  staleSince: IsoDate | null;
+  embedded?: boolean;
+  /** Set when several kids share this phone: "Changer d'enfant". */
+  onSwitchKid?: () => void;
+};
+
+export function KidScreen({ doc, today, staleSince, embedded = false, onSwitchKid }: Props) {
   const { t, f } = useI18n();
   const model = useMemo(() => kidModel(doc.kid, today), [doc, today]);
   const { numbers, allowance } = model;
@@ -85,7 +95,17 @@ export function KidScreen({ doc, today, staleSince, embedded = false }: { doc: K
       <BirthdayCard model={model} />
       <Passbook model={model} />
 
-      <footer>{t.kid.footer}</footer>
+      <footer>
+        <p>{t.kid.footer}</p>
+        {!embedded && (
+          <p class="footer-links">
+            {onSwitchKid && (
+              <button type="button" class="linkbtn" onClick={onSwitchKid}>{t.kid.switchKid}</button>
+            )}
+            <PrivacyLink />
+          </p>
+        )}
+      </footer>
     </Root>
   );
 }

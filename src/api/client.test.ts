@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { deleteBlob, getBlob, mintInvite, postBlob, putBlob } from './client';
+import { deleteBlob, getBlob, getInstance, mintInvite, postBlob, putBlob } from './client';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -106,5 +106,16 @@ describe('mintInvite', () => {
     expect(await mintInvite('x', 14)).toEqual({ ok: false, error: 'bad_token' });
     respond(503, { error: 'admin_disabled' });
     expect(await mintInvite('x', 14)).toEqual({ ok: false, error: 'admin_disabled' });
+  });
+});
+
+describe('getInstance', () => {
+  it("returns the owner's contact, or null", async () => {
+    respond(200, { contact: 'banque@example.org' });
+    expect(await getInstance()).toEqual({ contact: 'banque@example.org' });
+    respond(200, { contact: null });
+    expect(await getInstance()).toEqual({ contact: null });
+    vi.stubGlobal('fetch', vi.fn(async () => { throw new TypeError('offline'); }));
+    expect(await getInstance()).toEqual({ contact: null });
   });
 });

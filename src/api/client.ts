@@ -104,3 +104,9 @@ export async function mintInvite(
   }
   return failure(r);
 }
+
+/** The privacy page's optional owner contact. Null when unset or unreachable. */
+export async function getInstance(): Promise<{ contact: string | null }> {
+  const r = await call('/instance');
+  return { contact: r?.status === 200 && typeof r.body.contact === 'string' ? r.body.contact : null };
+}

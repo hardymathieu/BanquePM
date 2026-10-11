@@ -20,11 +20,11 @@ const KID_NOTES: Record<string, string> = {
 };
 
 /** The fixture ledger as Léa's, every unanswered day before `today` marked kept. */
-export function demoLea(today: IsoDate): KidDoc {
+export function demoLea(today: IsoDate, name = 'Léa'): KidDoc {
   let n = 0;
   const doc = importRows(
     (rows as [string, number][]).map(([date, amount]) => ({ date, amount, comment: '' })),
-    { name: 'Léa', birthday: '2016-12-03', ledgerStart: '2025-01-01', newId: () => `demo${String(++n).padStart(4, '0')}` },
+    { name, birthday: '2016-12-03', ledgerStart: '2025-01-01', newId: () => `demo${String(++n).padStart(4, '0')}` },
   );
   const sundays = { ...doc.sundays };
   for (const d of pendingDays(doc, today)) if (d < '2026-09-20') sundays[d] = 0;
@@ -39,11 +39,11 @@ async function post(base: string, body: unknown, headers: Record<string, string>
   if (res.status !== 201) throw new Error(`POST /blobs → ${res.status} ${await res.text()}`);
 }
 
-export async function createDemoBank(base: string, adminToken: string, today: IsoDate): Promise<DemoBank> {
+export async function createDemoBank(base: string, adminToken: string, today: IsoDate, name = 'Léa'): Promise<DemoBank> {
   const root = generateRoot();
   const family = await deriveFamily(root);
   const kid = await deriveKid(root, 0);
-  const doc = demoLea(today);
+  const doc = demoLea(today, name);
   const familyDoc: FamilyDoc = {
     format: 'bpm-family',
     v: 1,

@@ -37,3 +37,8 @@ render(<App route={route(location.pathname, fragment, getKids())} />, document.g
 addEventListener('hashchange', () => {
   if (parseFragment(location.hash)) location.reload();
 });
+
+// Offline after the first visit (SPEC §10.3). Not in `npm run dev`, where files change all the time.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  void navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+}

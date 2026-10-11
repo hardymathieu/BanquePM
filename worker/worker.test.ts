@@ -390,3 +390,20 @@ describe('what the server stores (SPEC §5.1)', () => {
     expect(await cols('invites')).toEqual(['code_hash', 'expires_on']);
   });
 });
+
+describe('GET /instance (privacy page contact, SPEC §14)', () => {
+  it('returns null by default', async () => {
+    const r = await api('/instance');
+    expect(r.status).toBe(200);
+    expect(await r.json()).toEqual({ contact: null });
+  });
+
+  it("returns the owner's INSTANCE_CONTACT, trimmed", async () => {
+    const r = await handle(new Request('https://bpm.test/api/v1/instance'), { ...env, INSTANCE_CONTACT: '  banque@example.org ' });
+    expect(await r.json()).toEqual({ contact: 'banque@example.org' });
+  });
+
+  it('only answers GET', async () => {
+    expect((await api('/instance', { method: 'POST' })).status).toBe(405);
+  });
+});

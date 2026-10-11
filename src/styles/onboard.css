@@ -47,3 +47,18 @@ main.onboard h1 { font-size: 28px; font-weight: 800; line-height: 1.2; margin: 1
 .viewer div.kid { padding: 16px 0 0; }
 .viewer .hist .h { cursor: default; }
 .onboard .actions .file-btn { margin-top: 12px; }
+
+/* privacy page, footers, kid picker */
+.privacy h2 { font-size: 19px; margin-top: 22px; margin-bottom: 6px; }
+.privacy p { margin-top: 4px; }
+.privacy .bullets { list-style: disc; padding-left: 22px; }
+.privacy .bullets li + li { margin-top: 4px; }
+.privacy .contact { font-weight: 600; overflow-wrap: anywhere; }
+.privacy a { color: var(--mine); }
+.privacy-link { color: var(--ink-2); display: inline-block; padding: 10px 0; min-height: 40px; }
+.onboard footer, .parent-footer { margin-top: 26px; font-size: 14px; }
+.kid .footer-links { display: flex; gap: 18px; align-items: center; margin-top: 4px; }
+.kid .footer-links .linkbtn { color: var(--mine); }
+.picker h1 { font-size: 28px; font-weight: 800; margin: 24px 0 18px; }
+.picker ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.pick { width: 100%; min-height: 72px; border: 0; border-radius: 16px; background: var(--card); color: var(--ink); font-family: var(--hand); font-size: 30px; cursor: pointer; border-left: 6px solid var(--coin); }
