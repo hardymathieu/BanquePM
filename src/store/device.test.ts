@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { forgetDevice, forgetParent, getCache, getKids, getParent, removeKid, saveKid, setCache, setParent } from './device';
+import { forgetDevice, forgetParent, getCache, getKids, getParent, getTipDismissed, removeKid, saveKid, setCache, setParent, setTipDismissed } from './device';
 
 function memoryStorage(): Storage {
   const m = new Map<string, string>();
@@ -104,5 +104,17 @@ describe('parent root (SPEC §10.3)', () => {
     expect(() => setParent('x')).not.toThrow();
     expect(getParent()).toBeNull();
     expect(() => forgetDevice()).not.toThrow();
+  });
+});
+
+describe('monthly tip (SPEC §11)', () => {
+  it('remembers the month it was dismissed, and survives throwing storage', () => {
+    vi.stubGlobal('localStorage', memoryStorage());
+    expect(getTipDismissed()).toBeNull();
+    setTipDismissed('2026-10');
+    expect(getTipDismissed()).toBe('2026-10');
+    vi.stubGlobal('localStorage', throwing);
+    expect(getTipDismissed()).toBeNull();
+    expect(() => setTipDismissed('2026-10')).not.toThrow();
   });
 });

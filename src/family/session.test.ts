@@ -158,3 +158,37 @@ describe('revoke (SPEC §7.2)', () => {
     expect((await kidBlob(server, root, 1))?.kid.moves).toHaveLength(1);
   });
 });
+
+describe('backups and deletion (SPEC §4.3, §9.5, §11)', () => {
+  it('can save without counting a change (export reset, word check)', async () => {
+    const { session } = await setup();
+    await session.save(deposit('m1'), TODAY);
+    await session.save((f) => ({ ...f, backup: { lastExportOn: TODAY, changesSinceExport: 0 } }), TODAY, { count: false });
+    expect(session.family.backup).toEqual({ lastExportOn: TODAY, changesSinceExport: 0 });
+  });
+
+  it('replaces the family with a backup and deletes the blobs of kids it no longer has', async () => {
+    const { server, root, session } = await setup();
+    const backup = session.family;
+    await session.save((f) => addKid(f, newKidDoc({ name: 'Tom', birthday: null, allowance: 2, weekday: 0, apr: 0.12 }, TODAY)).family, TODAY);
+    expect(await kidBlob(server, root, 1)).not.toBeNull();
+    expect(await session.replaceWith(backup, TODAY)).toEqual({ ok: true });
+    expect(session.family.kids.map((k) => k.doc.name)).toEqual(['Léa']);
+    expect(await kidBlob(server, root, 1)).toBeNull();
+    expect((await kidBlob(server, root, 0))?.kid.name).toBe('Léa');
+  });
+
+  it('removes a kid: family first, then its blob', async () => {
+    const { server, root, session } = await setup();
+    expect(await session.removeKid(0, TODAY)).toEqual({ ok: true });
+    expect(session.family.kids).toEqual([]);
+    expect(await kidBlob(server, root, 0)).toBeNull();
+  });
+
+  it('deletes the whole family, kid blobs included', async () => {
+    const { server, session } = await setup();
+    expect(server.rows.size).toBe(2);
+    expect(await session.deleteFamily()).toEqual({ ok: true });
+    expect(server.rows.size).toBe(0);
+  });
+});

@@ -12,6 +12,7 @@ const Landing = lazy(() => import('./onboarding/Landing'));
 const CreateFamily = lazy(() => import('./onboarding/CreateFamily'));
 const Restore = lazy(() => import('./onboarding/Restore'));
 const Admin = lazy(() => import('./admin/AdminInvites'));
+const BackupViewer = lazy(() => import('./onboarding/BackupViewer'));
 
 function Page({ route }: { route: Route }) {
   switch (route.page) {
@@ -20,7 +21,9 @@ function Page({ route }: { route: Route }) {
     case 'parent':
       return <ParentApp root={route.root} />;
     case 'create':
-      return <CreateFamily invite={route.invite} adminToken={route.adminToken ?? null} />;
+      return <CreateFamily invite={route.invite} adminToken={route.adminToken ?? null} fromBackup={route.fromBackup ?? null} />;
+    case 'backup':
+      return <BackupViewer file={route.file} />;
     case 'restore':
       return <Restore />;
     case 'admin':

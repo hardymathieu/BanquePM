@@ -139,7 +139,7 @@ test('adds a kid, shows its link and QR code, and the link works', async ({ page
 test('a new link revokes the old one (SPEC §16 E2E 5)', async ({ page, browser, baseURL }) => {
   const bank = await demoBank(baseURL!);
   await page.goto(bank.parentLink);
-  await page.getByText('Lien de Léa', { exact: true }).click();
+  await page.getByText('Lien de Léa et sauvegarde', { exact: true }).click();
   await page.getByRole('button', { name: 'Créer un nouveau lien pour Léa' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Créer le nouveau lien' }).click();
   await expect(page.getByText("Nouveau lien créé. L'ancien ne marche plus.")).toBeVisible();

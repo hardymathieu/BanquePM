@@ -12,15 +12,17 @@ import { centsText } from './text';
 
 const NOTHING_YET = 0.005;
 
-export function KidScreen({ doc, today, staleSince }: { doc: KidPublicDoc; today: IsoDate; staleSince: IsoDate | null }) {
+/** `embedded`: inside another page (the backup viewer), so not a second <main>. */
+export function KidScreen({ doc, today, staleSince, embedded = false }: { doc: KidPublicDoc; today: IsoDate; staleSince: IsoDate | null; embedded?: boolean }) {
   const { t, f } = useI18n();
   const model = useMemo(() => kidModel(doc.kid, today), [doc, today]);
   const { numbers, allowance } = model;
   const parts = f.balanceParts(numbers.balance);
   const day = allowance ? f.weekdayName(allowance.weekday) : '';
 
+  const Root = embedded ? 'div' : 'main';
   return (
-    <main class="kid">
+    <Root class="kid">
       {staleSince && <p class="stale">{t.kid.stale(f.dateLong(staleSince))}</p>}
       <p class="hello">{t.kid.hello(doc.kid.name)}</p>
       <p class="balance" aria-label={f.money(numbers.balance)}>
@@ -84,6 +86,6 @@ export function KidScreen({ doc, today, staleSince }: { doc: KidPublicDoc; today
       <Passbook model={model} />
 
       <footer>{t.kid.footer}</footer>
-    </main>
+    </Root>
   );
 }

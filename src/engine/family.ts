@@ -62,3 +62,9 @@ export function newFamily(kid: KidDoc, today: IsoDate, locale: 'fr' | 'en'): Fam
 export function confirmRecovery(family: FamilyDoc, today: IsoDate): FamilyDoc {
   return { ...family, recovery: { confirmedOn: today } };
 }
+
+/** "Supprimer la banque de Léa": the kid leaves the family; nextSlot stays, so the slot is never reused. */
+export function removeKid(family: FamilyDoc, slot: number): FamilyDoc {
+  if (!family.kids.some((k) => k.slot === slot)) throw new Error('unknown_slot');
+  return { ...family, kids: family.kids.filter((k) => k.slot !== slot), nextSlot: freeSlot(family) };
+}

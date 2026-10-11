@@ -2,6 +2,7 @@
 // Pure, so it is easy to test. The fragment is read once and then removed (SPEC §7.4).
 import { fromBase64url } from './crypto/base64url';
 import type { Fragment } from './crypto/links';
+import type { ExportFile } from './engine/types';
 import type { StoredKid } from './store/device';
 
 export type Route =
@@ -9,7 +10,9 @@ export type Route =
   | { page: 'parent'; root: Uint8Array | null }
   | { page: 'landing' }
   /** `adminToken` comes from /admin, in memory only: the owner's own bank (SPEC §10.1). */
-  | { page: 'create'; invite: string | null; adminToken?: string }
+  | { page: 'create'; invite: string | null; adminToken?: string; fromBackup?: ExportFile }
+  /** The offline viewer (SPEC §11): the file is read in the browser and kept in memory only. */
+  | { page: 'backup'; file: ExportFile | null }
   | { page: 'restore' }
   | { page: 'admin' }
   | { page: 'not-found' };
@@ -25,6 +28,7 @@ export function route(path: string, fragment: Fragment | null, storedKids: Store
   if (path === '/creer') return { page: 'create', invite: null };
   if (path === '/restaurer') return { page: 'restore' };
   if (path === '/admin') return { page: 'admin' };
+  if (path === '/sauvegarde') return { page: 'backup', file: null };
   if (path !== '/') return { page: 'not-found' };
   for (const kid of storedKids) {
     const key = fromBase64url(kid.key);
@@ -40,5 +44,6 @@ export const PATHS: Record<Route['page'], string> = {
   create: '/creer',
   restore: '/restaurer',
   admin: '/admin',
+  backup: '/sauvegarde',
   'not-found': '/',
 };

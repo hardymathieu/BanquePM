@@ -15,7 +15,7 @@ import { WeekdaySelect } from './WeekdaySelect';
 type Props = {
   family: FamilyDoc;
   today: IsoDate;
-  save: (change: Change) => Promise<SaveResult>;
+  save: (change: Change, opts?: { count?: boolean }) => Promise<SaveResult>;
   report: (res: SaveResult) => boolean;
   onClose: () => void;
   onAdded: (slot: number) => void;

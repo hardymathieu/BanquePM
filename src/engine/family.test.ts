@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addKid, confirmRecovery, freeSlot, markChanged, moveKid, newFamily, newKidDoc, updateKid } from './family';
+import { addKid, confirmRecovery, freeSlot, markChanged, moveKid, newFamily, newKidDoc, removeKid, updateKid } from './family';
 import type { FamilyDoc } from './types';
 
 const lea = newKidDoc({ name: 'Léa', birthday: null, allowance: 2, weekday: 0, apr: 0.12 }, '2026-10-10');
@@ -72,5 +72,14 @@ describe('newFamily (SPEC §10.2)', () => {
 
   it('records when the recovery words were confirmed', () => {
     expect(confirmRecovery(newFamily(lea, '2026-10-10', 'fr'), '2026-10-12').recovery).toEqual({ confirmedOn: '2026-10-12' });
+  });
+});
+
+describe('removeKid (SPEC §9.5)', () => {
+  it('removes one kid and keeps nextSlot, so the slot is never reused', () => {
+    const f = addKid(addKid(family(), lea).family, { ...lea, name: 'Tom' }).family;
+    const g = removeKid(f, 0);
+    expect(g.kids.map((k) => k.doc.name)).toEqual(['Tom']);
+    expect(freeSlot(g)).toBe(2);
   });
 });

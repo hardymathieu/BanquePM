@@ -93,3 +93,15 @@ export function forgetDevice(): void {
     // nothing to forget
   }
 }
+
+const TIP = 'bpm.tipDismissed';
+
+/** The month ('YYYY-MM') the recovery-card tip was last dismissed on this device. */
+export function getTipDismissed(): string | null {
+  const v = read(TIP);
+  return typeof v === 'string' ? v : null;
+}
+
+export function setTipDismissed(month: string): void {
+  write(TIP, month);
+}

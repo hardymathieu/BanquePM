@@ -106,6 +106,62 @@ export const fr = {
     disabled: "L'administration est désactivée : ADMIN_TOKEN manque sur ce serveur ou fait moins de 32 caractères.",
     network: 'Pas de connexion. Réessaie dans un moment.',
   },
+  backup: {
+    bannerNever: (names: string) =>
+      `**Aucune sauvegarde pour l'instant.** Si tu perds ton lien et tes 12 mots, l'historique ${de(names)} est perdu. Personne ne peut le récupérer.`,
+    bannerStale: (days: number, names: string) =>
+      `**Aucune sauvegarde depuis ${days} jours.** Si tu perds ton lien et tes 12 mots, l'historique ${de(names)} est perdu. Personne ne peut le récupérer.`,
+    bannerChanges: (n: number) =>
+      `**${n} changements** depuis ta dernière sauvegarde. Si tu perds ton lien et tes 12 mots, ils seront perdus.`,
+    download: 'Télécharger la sauvegarde',
+    share: 'Partager la sauvegarde',
+    shareTitle: 'Sauvegarde de la banque',
+    toastExported: 'Sauvegarde téléchargée. Range-la hors de ce téléphone (cloud, clé USB, e-mail à toi-même).',
+    toastShared: 'Sauvegarde partagée.',
+    sectionTitle: 'Sauvegarde',
+    lastNever: "Aucune sauvegarde pour l'instant.",
+    last: (days: number, changes: number) =>
+      `Dernière sauvegarde : ${days === 0 ? "aujourd'hui" : days === 1 ? 'hier' : `il y a ${days} jours`}${changes ? `, ${changes} ${p(changes, 'changement', 'changements')} depuis` : ''}.`,
+    downloadShort: 'Télécharger',
+    restore: 'Restaurer',
+    fileHint: 'Le fichier contient tout, notes privées comprises. Il se lit aussi sans internet.',
+    notABackup: "Ce fichier n'est pas une sauvegarde de la banque.",
+    restoreTitle: 'Restaurer cette sauvegarde ?',
+    restoreSummary: (date: string, names: string) => `Sauvegarde du ${date} : ${names}.`,
+    restoreWarn:
+      "Toute ta banque sera remplacée par cette sauvegarde, et ce qui a changé depuis sera perdu. Les liens des enfants restent les mêmes, sauf si un lien a été changé depuis.",
+    restoreConfirm: 'Remplacer ma banque',
+    toastRestored: 'Sauvegarde restaurée.',
+    tip: "**Carte de récupération** : tes 12 mots n'ont pas encore été vérifiés. Sans eux, personne ne peut récupérer ta banque.",
+    tipAction: 'Vérifier mes mots',
+    tipLater: 'Plus tard',
+  },
+  danger: {
+    deleteKid: (name: string) => `Supprimer la banque ${de(name)}`,
+    deleteKidText: (name: string) =>
+      `Tout l'historique ${de(name)} sera effacé de ce serveur et son lien ne marchera plus. Télécharge d'abord une sauvegarde si tu veux pouvoir le retrouver.`,
+    deleteAll: 'Supprimer toute ma banque',
+    deleteAllText:
+      'Toute ta banque, tous les enfants et leurs liens seront effacés de ce serveur. Personne ne pourra les récupérer, sauf avec une sauvegarde.',
+    typeToConfirm: (word: string) => `Tape « ${word} » pour confirmer`,
+    confirmWord: 'SUPPRIMER',
+    delete: 'Supprimer',
+    toastKidDeleted: (name: string) => `Banque ${de(name)} supprimée.`,
+  },
+  viewer: {
+    title: 'Sauvegarde',
+    readOnly: (date: string) => `Sauvegarde du ${date}, en lecture seule. Rien n'est envoyé nulle part.`,
+    parentView: 'Vue parent',
+    kidView: 'Vue enfant',
+    viewGroup: 'Affichage',
+    createFromBackup: 'Créer une banque à partir de cette sauvegarde',
+    createHelp: 'Il te faut une invitation sur ce serveur. La nouvelle banque aura de nouveaux liens et 12 nouveaux mots.',
+    close: 'Fermer',
+    openBackup: 'Ouvrir une sauvegarde',
+    createTitle: "Créer une banque à partir d'une sauvegarde",
+    createSummary: (names: string) => `${names} : tout l'historique sera repris.`,
+    createSubmit: 'Créer la banque',
+  },
   parent: {
     appTitle: 'Banque de papa et maman · espace parent',
     kidsGroup: 'Enfant',
@@ -231,7 +287,7 @@ export const fr = {
     forgetHint: 'Ce téléphone ne retiendra plus ta banque. Pour revenir, il te faudra ton lien parent ou tes 12 mots.',
     forgetConfirm: 'Oublier',
 
-    sharingTitle: (name: string) => `Lien ${de(name)}`,
+    sharingTitle: (name: string) => `Lien ${de(name)} et sauvegarde`,
     qrAria: (name: string) => `QR code du lien ${de(name)}`,
     shareHelp: (name: string) =>
       `Scanne ce code avec le téléphone ${de(name)}, puis « Ajouter à l'écran d'accueil ». Ce lien permet seulement de regarder.`,

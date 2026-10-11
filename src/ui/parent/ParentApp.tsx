@@ -27,7 +27,7 @@ function Loaded({ root }: { root: Uint8Array }) {
   }
   return (
     <I18nContext.Provider value={i18nFor(state.family.prefs.locale)}>
-      <ParentHome family={state.family} session={state.session} save={fam.save} revoke={fam.revoke} reload={fam.reload} />
+      <ParentHome family={state.family} session={state.session} save={fam.save} revoke={fam.revoke} act={fam.act} reload={fam.reload} />
     </I18nContext.Provider>
   );
 }

@@ -26,9 +26,9 @@ export function useFamily(root: Uint8Array) {
   const refresh = useCallback(() => session && setState({ status: 'ready', session, family: session.family }), [session]);
 
   const save = useCallback(
-    async (change: Change): Promise<SaveResult> => {
+    async (change: Change, opts?: { count?: boolean }): Promise<SaveResult> => {
       if (!session) return { ok: false, error: 'server' };
-      const res = await session.save(change, localToday());
+      const res = await session.save(change, localToday(), opts);
       refresh();
       return res;
     },
@@ -45,6 +45,17 @@ export function useFamily(root: Uint8Array) {
     [session, refresh],
   );
 
+  /** Any other session operation (restore, delete…), then refresh the screen. */
+  const act = useCallback(
+    async <T,>(op: (s: FamilySession) => Promise<T>): Promise<T | null> => {
+      if (!session) return null;
+      const res = await op(session);
+      refresh();
+      return res;
+    },
+    [session, refresh],
+  );
+
   const reload = useCallback(async () => {
     if (!session) return load();
     const res = await session.reload();
@@ -52,5 +63,5 @@ export function useFamily(root: Uint8Array) {
     else setState({ status: 'error', error: res.error });
   }, [session, refresh, load]);
 
-  return { state, save, revoke, reload, retry: load };
+  return { state, save, revoke, act, reload, retry: load };
 }

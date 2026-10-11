@@ -7,7 +7,7 @@ export type KidCtx = {
   slot: number;
   doc: KidDoc;
   today: IsoDate;
-  save: (change: Change) => Promise<SaveResult>;
+  save: (change: Change, opts?: { count?: boolean }) => Promise<SaveResult>;
   /** Reports a failed save as a toast (with "Recharger" on a conflict). Returns true on success. */
   report: (res: SaveResult) => boolean;
 };

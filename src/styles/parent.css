@@ -102,3 +102,17 @@ dialog.sheet::backdrop { background: rgba(10, 15, 30, .45); }
 .toast { position: fixed; left: 50%; bottom: 18px; transform: translate(-50%, 20px); background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 12px; opacity: 0; transition: all .2s; max-width: calc(100% - 32px); font-size: 15px; z-index: 10; pointer-events: none; display: flex; gap: 12px; align-items: center; }
 .toast.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 .toast-action { background: none; border: 2px solid var(--paper); color: var(--paper); border-radius: 8px; padding: 4px 10px; font-weight: 800; cursor: pointer; min-height: 36px; }
+
+/* backup banner and monthly tip (SPEC §11), after the prototype */
+.banner { margin-top: 16px; background: var(--warn-bg); color: var(--warn-ink); border-radius: 12px; padding: 12px 14px; display: grid; gap: 10px; }
+.banner strong { font-weight: 800; }
+.banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.banner .btn.ghosty { color: var(--warn-ink); border-color: var(--warn-ink); }
+.banner.recovery-tip { background: var(--card); color: var(--ink); border: 2px solid var(--coin); }
+.banner.recovery-tip .btn.ghosty { color: var(--mine); border-color: var(--mine); }
+
+/* a <label> that looks like a button and opens a file picker */
+.file-btn { position: relative; display: flex; align-items: center; justify-content: center; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; }
+.file-btn:focus-within { outline: 3px solid var(--mine); outline-offset: 2px; }
+.btn.danger + .btn.danger { margin-top: 10px; }

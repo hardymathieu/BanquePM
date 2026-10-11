@@ -38,6 +38,11 @@ describe('format (fr-BE, SPEC §13)', () => {
     expect(f.dateWithDay('2026-10-04')).toBe('dim. 4 oct. 2026');
   });
 
+  it('lists names', () => {
+    expect(f.names(['Léa'])).toBe('Léa');
+    expect(f.names(['Léa', 'Tom', 'Noé'])).toBe('Léa, Tom et Noé');
+  });
+
   it('names weekdays', () => {
     expect(f.weekdayName(0)).toBe('dimanche');
     expect(f.weekdayName(3)).toBe('mercredi');

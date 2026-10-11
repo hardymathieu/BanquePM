@@ -20,6 +20,7 @@ export function formatter(locale: Locale) {
   };
   // 2023-01-01 was a Sunday.
   const weekday = date({ weekday: 'long' });
+  const list = new Intl.ListFormat(tag, { type: 'conjunction' });
 
   return {
     locale,
@@ -42,6 +43,8 @@ export function formatter(locale: Locale) {
     monthYear: date({ month: 'long', year: 'numeric' }),
     monthShort: date({ month: 'short', year: '2-digit' }),
     weekdayName: (w: Weekday) => weekday(`2023-01-0${1 + w}`),
+    /** "Léa et Tom" */
+    names: (names: string[]) => list.format(names),
   };
 }
 

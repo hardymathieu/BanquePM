@@ -42,6 +42,10 @@ describe('route', () => {
     expect(route('/creer', null, [])).toEqual({ page: 'create', invite: null });
   });
 
+  it('has the backup viewer, empty after a reload (the file lives in memory)', () => {
+    expect(route('/sauvegarde', null, [])).toEqual({ page: 'backup', file: null });
+  });
+
   it('has the admin and restore pages', () => {
     expect(route('/admin', null, []).page).toBe('admin');
     expect(route('/restaurer', null, []).page).toBe('restore');

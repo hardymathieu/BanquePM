@@ -55,7 +55,7 @@ test('admin mints an invite; a friend redeems it, creates Léa, confirms 3 words
   const kidLink = (await friend.locator('.url').textContent())!;
   await friend.getByRole('button', { name: 'Ouvrir mon espace parent' }).click();
   await expect(friend.getByText("Solde de Léa aujourd'hui")).toBeVisible();
-  await friend.getByText('Lien de Léa', { exact: true }).click();
+  await friend.getByText('Lien de Léa et sauvegarde', { exact: true }).click();
   await expect(friend.getByText(/^Mots vérifiés le/)).toBeVisible();
 
   const kid = await browser.newPage();

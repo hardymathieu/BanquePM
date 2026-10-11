@@ -9,14 +9,17 @@ import { ChangeRejected } from '../../family/session';
 import { useI18n } from '../../i18n';
 import { forgetDevice } from '../../store/device';
 import { Sheet } from '../shared/Sheet';
+import { ConfirmDelete } from './ConfirmDelete';
 import { useToast } from '../shared/Toast';
 import { type KidCtx, onKid } from './kidContext';
 import { nextScheduled, parseAmount, parsePercent } from './model';
 import { WeekdaySelect } from './WeekdaySelect';
 
-type Panel = null | 'kid' | 'allowance' | 'rate' | 'forget';
+type Panel = null | 'kid' | 'allowance' | 'rate' | 'forget' | 'delete-kid' | 'delete-all';
 
-export function Settings({ ctx }: { ctx: KidCtx }) {
+type Danger = { download: () => Promise<void>; deleteKid: () => Promise<void>; deleteAll: () => Promise<void> };
+
+export function Settings({ ctx, danger }: { ctx: KidCtx; danger: Danger }) {
   const { t, f } = useI18n();
   const toast = useToast();
   const { doc, today } = ctx;
@@ -60,7 +63,29 @@ export function Settings({ ctx }: { ctx: KidCtx }) {
         {panel === 'allowance' && <AllowanceForm ctx={ctx} onDone={(msg) => { setPanel(null); toast(msg); }} />}
         {panel === 'rate' && <RateForm ctx={ctx} onDone={(msg) => { setPanel(null); toast(msg); }} />}
         <button type="button" class="btn ghosty" onClick={() => setPanel('forget')}>{t.parent.forgetDevice}</button>
+        <button type="button" class="btn danger" onClick={() => setPanel('delete-kid')}>{t.danger.deleteKid(doc.name)}</button>
+        <button type="button" class="btn danger" onClick={() => setPanel('delete-all')}>{t.danger.deleteAll}</button>
       </details>
+      {panel === 'delete-kid' && (
+        <ConfirmDelete
+          title={t.danger.deleteKid(doc.name)}
+          text={t.danger.deleteKidText(doc.name)}
+          word={doc.name}
+          onDownload={() => void danger.download()}
+          onConfirm={danger.deleteKid}
+          onClose={() => setPanel(null)}
+        />
+      )}
+      {panel === 'delete-all' && (
+        <ConfirmDelete
+          title={t.danger.deleteAll}
+          text={t.danger.deleteAllText}
+          word={t.danger.confirmWord}
+          onDownload={() => void danger.download()}
+          onConfirm={danger.deleteAll}
+          onClose={() => setPanel(null)}
+        />
+      )}
       {panel === 'forget' && (
         <Sheet title={t.parent.forgetDevice} onClose={() => setPanel(null)}>
           <p class="sub">{t.parent.forgetHint}</p>

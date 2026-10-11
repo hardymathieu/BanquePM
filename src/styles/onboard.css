@@ -41,3 +41,9 @@ main.onboard h1 { font-size: 28px; font-weight: 800; line-height: 1.2; margin: 1
   .print-qr .qr { width: 38mm; height: 38mm; }
   .print-keep { font-weight: 700; border: .4mm solid #000; padding: 3mm; }
 }
+
+/* offline backup viewer */
+.viewer .view-switch { margin-top: 14px; }
+.viewer div.kid { padding: 16px 0 0; }
+.viewer .hist .h { cursor: default; }
+.onboard .actions .file-btn { margin-top: 12px; }

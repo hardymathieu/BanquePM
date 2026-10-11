@@ -5,7 +5,8 @@ import * as client from '../api/client';
 import { fromBase64url, toBase64url } from '../crypto/base64url';
 import { open, seal } from '../crypto/box';
 import { type BlobKeys, deriveFamily, deriveKid, type KidKeys } from '../crypto/keys';
-import { markChanged, moveKid } from '../engine/family';
+import { mergeImport } from '../engine/backup';
+import { markChanged, moveKid, removeKid } from '../engine/family';
 import { projectForKid } from '../engine/project';
 import { parseFamilyDoc } from '../engine/schema';
 import type { FamilyDoc, IsoDate, KidDoc } from '../engine/types';
@@ -88,14 +89,17 @@ export class FamilySession {
     return k;
   }
 
-  /** Applies `change`, saves the family, then publishes changed kid blobs. Saves run one at a time. */
-  save(change: Change, today: IsoDate): Promise<SaveResult> {
-    const run = this.queue.then(() => this.saveNow(change, today));
+  /**
+   * Applies `change`, saves the family, then publishes changed kid blobs. Saves run one at a time.
+   * `count: false` for changes that are not data (export reset, word check): no backup nag for them.
+   */
+  save(change: Change, today: IsoDate, opts: { count?: boolean } = {}): Promise<SaveResult> {
+    const run = this.queue.then(() => this.saveNow(change, today, opts.count ?? true));
     this.queue = run.catch(() => undefined);
     return run;
   }
 
-  private async saveNow(change: Change, today: IsoDate): Promise<SaveResult> {
+  private async saveNow(change: Change, today: IsoDate, count: boolean): Promise<SaveResult> {
     for (let attempt = 0; attempt < 2; attempt++) {
       if (attempt > 0) {
         const fresh = await load(this.keys, this.api);
@@ -105,7 +109,8 @@ export class FamilySession {
       }
       let next: FamilyDoc;
       try {
-        next = markChanged(change(this.family));
+        next = change(this.family);
+        if (count) next = markChanged(next);
       } catch (e) {
         if (e instanceof ChangeRejected) return { ok: false, error: 'rejected', reason: e.reason };
         throw e;
@@ -170,6 +175,46 @@ export class FamilySession {
     this.published.delete(slot);
     const del = await this.api.deleteBlob(old.id, old.writeToken);
     return del.ok || del.error === 'not_found' ? { ok: true, slot: to } : { ok: false, error: 'old_link_kept' };
+  }
+
+  /** Deletes kid blobs after their kids left the family. Missing blobs are fine. */
+  private async deleteKidBlobs(slots: number[]): Promise<boolean> {
+    let ok = true;
+    for (const slot of slots) {
+      const k = await this.kid(slot);
+      const del = await this.api.deleteBlob(k.id, k.writeToken);
+      if (!del.ok && del.error !== 'not_found') ok = false;
+      this.published.delete(slot);
+    }
+    return ok;
+  }
+
+  /** "Restaurer" a backup into this family: same keys, data from the file (SPEC §4.3). */
+  async replaceWith(imported: FamilyDoc, today: IsoDate): Promise<{ ok: true } | { ok: false; error: SaveError | 'rejected' | 'old_links_kept' }> {
+    let deleteSlots: number[] = [];
+    const saved = await this.save((current) => {
+      const merged = mergeImport(current, imported);
+      deleteSlots = merged.deleteSlots;
+      return merged.family;
+    }, today);
+    if (!saved.ok) return { ok: false, error: saved.error };
+    return (await this.deleteKidBlobs(deleteSlots)) ? { ok: true } : { ok: false, error: 'old_links_kept' };
+  }
+
+  /** "Supprimer la banque de Léa" (SPEC §9.5): out of the family first, then the blob. */
+  async removeKid(slot: number, today: IsoDate): Promise<{ ok: true } | { ok: false; error: SaveError | 'rejected' | 'old_links_kept' }> {
+    const saved = await this.save((f) => {
+      if (!f.kids.some((k) => k.slot === slot)) throw new ChangeRejected('unknown_slot');
+      return removeKid(f, slot);
+    }, today);
+    if (!saved.ok) return { ok: false, error: saved.error };
+    return (await this.deleteKidBlobs([slot])) ? { ok: true } : { ok: false, error: 'old_links_kept' };
+  }
+
+  /** "Supprimer toute ma banque": the server deletes the family blob and its kid blobs. */
+  async deleteFamily(): Promise<{ ok: true } | { ok: false; error: SaveError }> {
+    const del = await this.api.deleteBlob(this.keys.id, this.keys.writeToken);
+    return del.ok || del.error === 'not_found' ? { ok: true } : { ok: false, error: writeError(del.error) };
   }
 
   /** Reloads from the server, for example after a conflict the user chose to see. */

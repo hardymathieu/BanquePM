@@ -100,3 +100,15 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
 - **Landing.** "Ouvrir une sauvegarde" arrives with milestone 7. "Ouvrir mon espace parent" shows when the device remembers a parent.
 - **Kid blobs for new slots** (new kid, revocation, a new family) are created with `POST` straight away, instead of a `PUT` that 404s first.
 - **Bundles.** Each onboarding page and the wordlists are separate lazy chunks. Kids' phones load none of them.
+
+## Backups (milestone 7)
+
+- **Banner wording.** Never exported: "**Aucune sauvegarde pour l'instant.** …" (the spec's "depuis N jours" assumes an earlier export). After 30+ days: "**Aucune sauvegarde depuis N jours.** …". From 5 changes: "**N changements** depuis ta dernière sauvegarde…". Staleness wins when both apply. "l'historique de Léa" lists every kid ("de Léa et Tom").
+- **Changes that aren't data don't count.** `session.save(change, today, { count: false })`. Resetting the counters after an export or share, and confirming the recovery words, no longer add to `changesSinceExport` (this amends the milestone 6 note).
+- **Export.** `banque-<prénoms>-<date>.json`, names without accents. The file holds the family document only: never the root, never a key (a test checks the top-level keys). On phones whose share sheet takes files, "Partager la sauvegarde" is offered too, and a completed share counts as an export.
+- **Restore into the current family** (`mergeImport`). Same keys and same parent link. A kid keeps its slot only if that slot is active now; otherwise it moves to a fresh slot, so restoring an old backup can never revive a revoked kid link. Kid blobs of slots the backup doesn't have are deleted. The current recovery status is kept, since the words didn't change.
+- **A new bank from a backup** (from the offline viewer, with an invite). New root, new words, new kid links. Slots are kept (new ids anyway). Backup counters and recovery status start fresh.
+- **Offline viewer (`/sauvegarde`).** The file is read in the browser and kept in memory only; a reload goes back to the landing page. It is read-only, with a parent view (balance, livret with private notes) and a kid view (the real kid screen), and makes no API call (an e2e test blocks `/api` and checks nothing was attempted). Opening the page itself without a network needs the service worker (milestone 9).
+- **Deletion** lives at the bottom of Réglages. Typing the kid's name (case-insensitive) or SUPPRIMER is required, and "Télécharger la sauvegarde" is offered in the same sheet. Removing a kid takes it out of the family first, then deletes its blob, and `nextSlot` keeps the slot retired. Deleting the bank deletes the family blob (the server removes its kid blobs), forgets the device and returns to `/`.
+- **Monthly tip.** It is due while the words were never checked. "Plus tard" stores the month on this device (`bpm.tipDismissed`), not in the family document, since it is a per-device convenience. "Vérifier mes mots" opens the card with the words.
+- **Fixed:** the chart tooltip's global `.tip` class hid the new tip banner. Chart tooltip styles are now scoped to `.chart`.
