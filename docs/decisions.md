@@ -42,3 +42,24 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
   - PUT and DELETE answer 404 before 401: the id is the capability.
 - **No logs:** `observability.enabled: false` and `logpush: false`, both checked by a test.
 - **Tooling:** `@cloudflare/vitest-pool-workers` is deprecated, so the tests use its successor `@cloudflare/vitest-plugin` with Vitest 5. Runtime types come from `wrangler types` and live in `worker-configuration.d.ts` at the root, so `grep -R "console\." worker/` stays empty.
+
+## Kid view (milestone 4)
+
+- **Fonts** come from the `@fontsource` npm packages (OFL, Latin subset, WOFF2 with WOFF fallback), bundled by Vite. No font request leaves the instance.
+- **Copy fixes over the prototype:**
+  - French elision ("Intérêts d'octobre", not "de octobre").
+  - Plurals through `Intl.PluralRules` ("0 centime", "1 pièce gardée … l'avais mise").
+  - The allowance weekday is named ("pièce du mercredi"), never a hard-coded "dimanche".
+  - A full coin reads "une pièce entière".
+  - Past the milestone the sentence becomes "Ta banque te donne déjà chaque semaine une pièce entière, ou plus. Bravo !".
+  - An empty bank gets "Dès que tu mets de l'argent ici…" instead of "0 centime".
+  - A day's or week's interest of 1 € or more is shown in euros, not centimes.
+  - "autant que papa" is kept as written in the spec.
+- **No allowance** (amount 0 today): the coin gauge and the "si tu mets ta pièce" path are hidden.
+- **Passbook:** a banked coin and an extra move on the same day are two rows (the prototype merged them). Interest months that round to 0,00 € get no row.
+- **Chart ticks** step by 1/2/5 × 10ⁿ €, at least 1 €, at most 5 intervals. Month labels are spaced 1, 2, 3, 6, 12… months apart.
+- **Loading and offline.** The cached ciphertext is shown at once, then refreshed. If the API can't be reached, the page keeps the cached copy with "Mis à jour le <date of the last successful fetch>". Opening the page with no network at all needs the service worker (milestone 9).
+- **A revoked link (404)** removes the kid and its cache from the device.
+- **Several remembered kids:** `/` opens the most recently opened one until the kid picker lands (milestone 9).
+- **CSP.** SVG colours come from CSS classes, and the tooltip is positioned through the CSSOM. No inline style or script, so `style-src 'self'` and `script-src 'self'` hold. They are served by `public/_headers` and checked in e2e.
+- **Bundle.** Pages that only read links don't load the BIP39 wordlists (`src/crypto/sizes.ts`, `importBoxKey` lives in `box.ts`). The kid page is 40 KB of JS (16 KB gzipped).

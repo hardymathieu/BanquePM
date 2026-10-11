@@ -3,8 +3,11 @@ import { entropyToMnemonic, mnemonicToEntropy } from '@scure/bip39';
 import { wordlist as english } from '@scure/bip39/wordlists/english.js';
 import { wordlist as french } from '@scure/bip39/wordlists/french.js';
 import { toBase64url } from './base64url';
+import { importBoxKey } from './box';
+import { ROOT_BYTES } from './sizes';
 
-export const ROOT_BYTES = 16;
+export { importBoxKey, ROOT_BYTES };
+
 const SALT = new TextEncoder().encode('banque-papa-maman/v1');
 
 export function generateRoot(): Uint8Array {
@@ -24,11 +27,6 @@ export async function hkdf(root: Uint8Array, info: string, length: number): Prom
     length * 8,
   );
   return new Uint8Array(bits);
-}
-
-/** AES-256-GCM key for box.ts. Non-extractable: raw bytes only exist where a link needs them. */
-export function importBoxKey(raw: Uint8Array): Promise<CryptoKey> {
-  return crypto.subtle.importKey('raw', raw as BufferSource, 'AES-GCM', false, ['encrypt', 'decrypt']);
 }
 
 /** What the server stores to check a write token: base64url(SHA-256(UTF-8(token))). */

@@ -1,9 +1,6 @@
 // Capability links. Secrets live only in the fragment, which browsers never send (SPEC §7).
 import { fromBase64url, toBase64url } from './base64url';
-import { ROOT_BYTES } from './keys';
-
-const ID_BYTES = 16;
-const KEY_BYTES = 32;
+import { ID_BYTES, KEY_BYTES, ROOT_BYTES } from './sizes';
 
 export type Fragment =
   | { kind: 'parent'; root: Uint8Array }

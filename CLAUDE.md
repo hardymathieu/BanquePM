@@ -37,18 +37,19 @@ You are building a zero-knowledge, open-source kids' savings app.
 ```
 npm test             # vitest: "unit" project (Node) + "worker" project (workerd + local D1)
 npm run typecheck    # tsc for the app, the engine's no-DOM config and the Worker
-npm run dev          # vite build + local D1 migrations + wrangler dev (needs .dev.vars, see .dev.vars.example)
+npm run dev          # wrangler dev (API, :8787) + vite (UI with HMR, :5173, proxies /api); needs .dev.vars
+npm run seed         # creates the fictional demo bank ("Léa") on the dev server, prints kid and parent links
 npm run build        # vite build into dist/
 npm run deploy       # vite build + d1 migrations apply DB --remote + wrangler deploy
 npm run types        # regenerate worker-configuration.d.ts after changing wrangler.jsonc
-npm run e2e          # playwright, phone viewport, light + dark (milestone 10)
+npm run e2e          # playwright against a production build in wrangler dev, 390×844, light + dark
 python3 fixtures/engine_reference.py   # prints the reference test vectors
 ```
 
 ## Before you say a milestone is done
 
 - `npm test` and `npm run typecheck` pass, and for UI milestones `npm run e2e` passes too.
-- You opened the screen at 390×844 in light and dark (screenshot) and compared it with the prototype.
+- You opened the screen at 390×844 in light and dark (screenshot) and compared it with the prototype. The e2e tests save screenshots under `test-results/`; render the prototype the same way into the scratchpad, never into the repo.
 - `grep -R "console\." worker/` is empty.
 - In the network tab (or a Playwright request log), no request goes to another origin.
 

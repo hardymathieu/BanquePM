@@ -8,23 +8,31 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "vite build && wrangler d1 migrations apply DB --local && wrangler dev",
+    "dev": "vite build && wrangler d1 migrations apply DB --local && node scripts/dev.mjs",
     "build": "vite build",
     "deploy": "vite build && wrangler d1 migrations apply DB --remote && wrangler deploy",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p src/engine/tsconfig.json && tsc --noEmit -p worker/tsconfig.json",
-    "types": "wrangler types"
+    "types": "wrangler types",
+    "seed": "tsx scripts/seed.ts",
+    "e2e": "playwright test"
   },
   "devDependencies": {
     "@cloudflare/vitest-plugin": "^1.4.0",
+    "@playwright/test": "^1.64.0",
+    "@preact/preset-vite": "^2.10.6",
     "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
     "vitest": "^5.0.3",
     "wrangler": "^4.149.0"
   },
   "dependencies": {
-    "@scure/bip39": "^2.4.0"
+    "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+    "@fontsource/patrick-hand": "^5.3.0",
+    "@scure/bip39": "^2.4.0",
+    "preact": "^11.0.1"
   }
 }

@@ -19,6 +19,11 @@ async function pipe(bytes: Uint8Array, stream: CompressionStream | Decompression
   return new Uint8Array(await new Response(out).arrayBuffer());
 }
 
+/** AES-256-GCM key for seal/open. Non-extractable: raw bytes only exist where a link needs them. */
+export function importBoxKey(raw: Uint8Array): Promise<CryptoKey> {
+  return crypto.subtle.importKey('raw', raw as BufferSource, 'AES-GCM', false, ['encrypt', 'decrypt']);
+}
+
 const aad = (blobId: string) => new TextEncoder().encode(blobId);
 
 export async function seal(key: CryptoKey, blobId: string, value: unknown): Promise<Uint8Array> {

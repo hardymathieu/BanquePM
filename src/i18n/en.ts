@@ -1,0 +1,86 @@
+// English UI strings. Same keys as fr.ts (type-checked); polish is out of scope for v1.
+import type { FractionKey } from '../engine/kidNumbers';
+import type { Messages } from './fr';
+
+const plural = new Intl.PluralRules('en');
+const p = (n: number, one: string, other: string) => (plural.select(n) === 'one' ? one : other);
+
+const fractions: Record<FractionKey, string> = {
+  bit: 'a little bit',
+  quarter: 'a quarter',
+  third: 'a third',
+  half: 'half',
+  twoThirds: 'two thirds',
+  threeQuarters: 'three quarters',
+  almostAll: 'almost all',
+  whole: 'all',
+};
+
+export const en: Messages = {
+  app: {
+    name: 'Mum and dad’s bank',
+    loading: 'Loading…',
+  },
+  kid: {
+    title: (name) => `${name}’s bank`,
+    hello: (name) => `Hello ${name}!`,
+    where: 'in your mum and dad’s bank',
+    today: (amount) => `Today the bank gave you **${amount}**, just because your money is here. Tomorrow it does it again.`,
+    todayEmpty: 'As soon as you put money here, the bank adds a little more every day.',
+    cents: (n) => `${n} ${p(n, 'cent', 'cents')}`,
+
+    coinTitle: 'Your bank pays you too',
+    thisWeek: 'This week it gave you',
+    weekFraction: (key, coin, day) =>
+      key === 'whole'
+        ? `That’s **a whole coin**, as much as your ${coin} ${day} coin, for doing nothing.`
+        : `That’s **${fractions[key]}** of your ${coin} ${day} coin, for doing nothing.`,
+    goal: (amount) =>
+      `The bigger your bank, the fuller the coin. Once you have **${amount}**, the bank will give you a whole coin every week, as much as dad.`,
+    goalReached: 'Your bank already gives you a whole coin every week, or more. Well done!',
+    coinAria: (coin, percent) => `A ${coin} coin, ${percent} percent full`,
+
+    chartTitle: 'What if you had saved every coin?',
+    gapKept: (n, day, gap) =>
+      p(
+        n,
+        `You kept ${n} ${day} coin for yourself. Had you saved it, you would have **${gap} more** today, interest included. That’s fine: it was your choice, and you enjoyed that coin.`,
+        `You kept ${n} ${day} coins for yourself. Had you saved them all, you would have **${gap} more** today, interest included. That’s fine: it was your choice, and you enjoyed those coins.`,
+      ),
+    allBanked: 'You saved every single coin. Well done!',
+    legendMine: 'Your account',
+    legendGhost: (day) => `With every ${day} coin`,
+    chartAria: (day, target) => `Your account compared with saving every ${day} coin, until ${target}`,
+    chartToday: 'today',
+    chartEndGhost: 'every coin',
+    chartEndMine: (age) => (age === null ? 'you' : `you, ${age}`),
+    tipFuture: ' (if you keep going)',
+    tipMine: 'your account',
+    tipGhost: 'with every coin',
+    tableToggle: 'See the numbers month by month',
+    tableMonth: 'End of month',
+    tableMine: 'Your account',
+    tableGhost: 'With every coin',
+
+    bdayTitle: (dayMonth, age) => `On ${dayMonth}, when you turn ${age}`,
+    sixMonthsTitle: 'In 6 months',
+    bdayWhen: (days) => `In ${days} ${p(days, 'day', 'days')}, you could have:`,
+    pathYes: (day) => `if you save your coin every ${day}`,
+    pathNo: 'if you add nothing more',
+
+    bookTitle: 'Your passbook',
+    deposit: 'Deposit',
+    withdrawal: 'Withdrawal',
+    coinRow: (day) => `${day} coin`,
+    interestRow: (monthYear, partial) => `Interest for ${monthYear}${partial ? ', so far' : ''}`,
+    paidByBank: 'paid by the bank',
+    bookMore: 'See the whole passbook',
+    bookLess: 'See less',
+
+    footer: 'Read only: everything is calculated on this phone from the list of deposits and withdrawals.',
+    stale: (date) => `Updated on ${date}. No connection right now.`,
+    revoked: 'This link no longer works. Ask your parents for a new one.',
+    loadError: 'Your bank can’t be opened right now. Check your connection and try again.',
+    retry: 'Try again',
+  },
+};

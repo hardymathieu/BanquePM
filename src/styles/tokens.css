@@ -1,0 +1,26 @@
+/* SPEC §13 tokens. The theme follows the OS and can be forced with data-theme. */
+:root {
+  --paper: #EEF4F1; --card: #FFFFFF; --ink: #18244A; --ink-2: #4A5675; --ink-3: #6B7590;
+  --rule: #D3DFDA; --mine: #2E63C7; --ghost: #B07F00; --coin: #D9A93A; --coin-deep: #9C7410;
+  --silver: #C9D1D6; --out: #8A3B6E; --grid: #DCE6E2;
+  --warn-bg: #FBF1D6; --warn-ink: #6B4E00;
+  --hand: 'Patrick Hand', 'Comic Neue', cursive;
+  --sans: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1830; --card: #16223F; --ink: #E8EEF2; --ink-2: #B4BFCE; --ink-3: #8C97AB;
+    --rule: #26345A; --mine: #5A8AE0; --ghost: #B08424; --coin: #D9A93A; --coin-deep: #E2BE5C;
+    --silver: #5E6B80; --out: #D07BB0; --grid: #24304F;
+    --warn-bg: #3A3015; --warn-ink: #F1D58A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1830; --card: #16223F; --ink: #E8EEF2; --ink-2: #B4BFCE; --ink-3: #8C97AB;
+  --rule: #26345A; --mine: #5A8AE0; --ghost: #B08424; --coin: #D9A93A; --coin-deep: #E2BE5C;
+  --silver: #5E6B80; --out: #D07BB0; --grid: #24304F;
+  --warn-bg: #3A3015; --warn-ink: #F1D58A;
+  color-scheme: dark;
+}

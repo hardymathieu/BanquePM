@@ -10,10 +10,12 @@
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node", "vite/client"]
   },
-  "include": ["src", "fixtures/*.json"]
+  "include": ["src", "fixtures/*.json", "vite.config.ts", "scripts", "e2e", "playwright.config.ts"]
 }
