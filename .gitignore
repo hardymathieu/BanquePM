@@ -1,0 +1,12 @@
+# Local-only design history (contains real personal data). Never commit.
+claude_work_banque-papa-maman-spec/
+
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+coverage/
+test-results/
+playwright-report/
+*.log
+.DS_Store

@@ -1,0 +1,11 @@
+{
+  // The engine is pure: no DOM types, no Node types. A stray `document`,
+  // `fetch` or `crypto` fails the typecheck. See also purity.test.ts.
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["./*.ts"],
+  "exclude": ["./*.test.ts"]
+}
