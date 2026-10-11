@@ -112,3 +112,15 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
 - **Deletion** lives at the bottom of Réglages. Typing the kid's name (case-insensitive) or SUPPRIMER is required, and "Télécharger la sauvegarde" is offered in the same sheet. Removing a kid takes it out of the family first, then deletes its blob, and `nextSlot` keeps the slot retired. Deleting the bank deletes the family blob (the server removes its kid blobs), forgets the device and returns to `/`.
 - **Monthly tip.** It is due while the words were never checked. "Plus tard" stores the month on this device (`bpm.tipDismissed`), not in the family document, since it is a per-device convenience. "Vérifier mes mots" opens the card with the words.
 - **Fixed:** the chart tooltip's global `.tip` class hid the new tip banner. Chart tooltip styles are now scoped to `.chart`.
+
+## Sheet importer (milestone 8)
+
+- **Where:** a "Nouveau livret / Depuis un tableau" choice, both when creating the bank (onboarding) and in "+ Ajouter un enfant". The CSV is read in the browser only.
+- **CSV:** RFC 4180 quoting, CRLF, and BOM handling. The separator is a comma, or a semicolon when the first line has more of them (Excel in French). Columns are found by header name ("Date", "Ajouté / Sorti" or "Montant", "Commentaire" or "Note"), so title rows above and extra columns (Solde, Intérêts…) are fine. Without such a header, columns 1–3 are assumed.
+- **Values:**
+  - Dates: `dd/mm/yyyy`, `d/m/yyyy`, `.` or `-` separators, or ISO.
+  - Amounts: `,` or `.` decimals, `€`, spaces (including narrow no-break spaces) as thousands separators, `−` or `-`, and `(1,00)` as negative. With both `.` and `,`, the last one is the decimal separator.
+  - Rows whose first cell isn't date-like (titles, totals, blank lines) are skipped.
+- **Refused, with the file line number:** an unreadable date such as `31/02/2025`, an unreadable amount, or a future date. A ledger that would go below zero is refused too, with the date and what was there: every later edit would otherwise hit the overdraft rule.
+- **Summary** worded as in SPEC §12, plus "Le livret commence le …", a note that comments become private notes, and a hint that pending days can all be marked kept at once. Pocket money, weekday and rate can be adjusted and the summary updates live (they decide which rows are coins).
+- **Name and birthday** come from the form; `ledgerStart` is the sheet's first date. Imported move ids are random, like any move.

@@ -162,6 +162,26 @@ export const fr = {
     createSummary: (names: string) => `${names} : tout l'historique sera repris.`,
     createSubmit: 'Créer la banque',
   },
+  sheet: {
+    modeGroup: 'Départ',
+    modeNew: 'Nouveau livret',
+    modeSheet: 'Depuis un tableau',
+    pick: 'Choisir le fichier CSV',
+    picked: (name: string) => `Fichier : ${name}`,
+    howTo:
+      'Dans Google Sheets : Fichier → Télécharger → Valeurs séparées par des virgules (.csv). Il faut une colonne Date et une colonne Ajouté / Sorti ; la colonne Commentaire est facultative.',
+    summary: (lines: number, banked: number, moves: number, pending: number, day: string, balance: string) =>
+      `${lines} ${p(lines, 'ligne', 'lignes')} : ${banked} ${p(banked, day, `${day}s`)} à la banque, ${moves} ${p(moves, 'mouvement', 'mouvements')}, ${pending} ${p(pending, day, `${day}s`)} à rattraper. Solde aujourd'hui : **${balance}**.`,
+    start: (date: string) => `Le livret commence le ${date}.`,
+    commentsPrivate: 'Les commentaires deviennent des notes privées. Tu pourras écrire ensuite des notes visibles par ton enfant.',
+    pendingHint: (day: string) => `Les ${day}s sans ligne sont « à rattraper » : tu pourras tous les marquer gardés d'un coup.`,
+    noRows: "Aucune ligne avec une date dans ce fichier. Vérifie qu'il a une colonne Date et une colonne Ajouté / Sorti.",
+    badDate: (row: number, text: string) => `Ligne ${row} : la date « ${text} » n'est pas lisible (jj/mm/aaaa).`,
+    badAmount: (row: number, text: string) => `Ligne ${row} : le montant « ${text} » n'est pas lisible.`,
+    futureDate: (row: number, date: string) => `Ligne ${row} : la date du ${date} est dans le futur.`,
+    overdraft: (date: string, amount: string) =>
+      `Le solde passe sous zéro le ${date} (il n'y avait que ${amount}). Corrige le tableau, puis réessaie.`,
+  },
   parent: {
     appTitle: 'Banque de papa et maman · espace parent',
     kidsGroup: 'Enfant',

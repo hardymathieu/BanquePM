@@ -116,3 +116,8 @@ dialog.sheet::backdrop { background: rgba(10, 15, 30, .45); }
 .file-btn input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; }
 .file-btn:focus-within { outline: 3px solid var(--mine); outline-offset: 2px; }
 .btn.danger + .btn.danger { margin-top: 10px; }
+
+/* sheet import (SPEC §12) */
+.sheet-import { margin-top: 12px; }
+.sheet-import .preview p + p { margin-top: 6px; }
+form > .seg + .field { margin-top: 14px; }
