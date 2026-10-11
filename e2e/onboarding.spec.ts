@@ -27,7 +27,7 @@ async function confirmWords(page: Page, words: string[]) {
   await page.getByRole('button', { name: "J'ai noté mes mots" }).click();
   for (const label of await page.locator('.recovery label').allTextContents()) {
     const n = Number(/(\d+)/.exec(label)![1]);
-    await page.getByLabel(label).fill(words[n - 1]!.toUpperCase());
+    await page.getByLabel(label, { exact: true }).fill(words[n - 1]!.toUpperCase());
   }
   await page.getByRole('button', { name: 'Vérifier' }).click();
 }
