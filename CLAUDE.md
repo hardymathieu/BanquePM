@@ -4,6 +4,8 @@ You are building a zero-knowledge, open-source kids' savings app.
 
 **The spec is local-only.** `claude_work_banque-papa-maman-spec/banque-spec/SPEC.md` is the source of truth, and `…/design/*.html` are the visual and behavioural prototypes. That folder is gitignored because it contains a real child's name, notes and birthday. Read it, but never copy names, notes or birthdays from it into committed files. Use "Léa" and fictional notes in code, tests and docs. Re-read the relevant SPEC section before each milestone (SPEC §17 gives the order).
 
+**`docs/decisions.md` amends the spec** (agreed with the owner). Where they differ, it wins. Add an entry whenever the owner settles an ambiguity or approves a deviation.
+
 ## Hard rules (never break these, even if asked in passing; ask the owner first)
 
 1. **Nothing readable leaves the browser.** Secrets live only in URL fragments, in memory and in `localStorage`. Never send a root, key, word, name, amount, date or note to the server in plaintext, in a header, a query string or an error report.
