@@ -86,3 +86,17 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
   - The backup banner, export, import and deleting a kid or the family are in milestone 7 (deletion offers an export first).
   - The recovery card is in milestone 6.
   - The sharing card is titled "Lien de Léa" until backups join it.
+
+## Onboarding (milestone 6)
+
+- **Routes:** `/creer` (create a bank), `/restaurer` (12 words) and `/admin`. An invite link `/#i=CODE` opens `/creer` with the code filled in. Navigation inside the app passes secrets in memory: the admin token used as "Créer ma banque" invite and a fresh root never appear in a URL. An e2e test checks the token.
+- **Admin token.** Typed on `/admin`, kept in memory only, never stored. Wrong token: "Ce n'est pas le bon mot de passe d'administration." Disabled server: an explanation of the 32-character rule.
+- **`FamilyDoc.recovery`** (optional, additive) holds `{ confirmedOn }`. It is set when the 3-word check passes, during onboarding or later from the parent app. Milestone 7's monthly reminder reads it. Confirming counts as one change for the backup banner.
+- **The 3-word check** picks 3 positions with the crypto RNG and ignores case and accents. "Je le ferai plus tard" is always visible.
+- **Recovery words** are shown in the device language at creation (French unless the phone is in English). Restoring accepts French or English and tries every root whose checksum matches.
+- **The printed card** is portalled into `<body>`. `@media print` hides everything else. It shows the host, 12 numbered words, a QR code of the parent link, the date and the "Range cette carte…" line. There is no kid name, which an e2e test checks.
+- **Parent app.** The 12 words sit behind a tap ("Vérifier mes mots", or "Voir mes 12 mots" once checked), so they are never on screen by default.
+- **Restore** offers suggestions from both wordlists. Pasting the 12 words into any box fills the boxes from there on, and Space moves to the next box.
+- **Landing.** "Ouvrir une sauvegarde" arrives with milestone 7. "Ouvrir mon espace parent" shows when the device remembers a parent.
+- **Kid blobs for new slots** (new kid, revocation, a new family) are created with `POST` straight away, instead of a `PUT` that 404s first.
+- **Bundles.** Each onboarding page and the wordlists are separate lazy chunks. Kids' phones load none of them.

@@ -37,6 +37,16 @@ describe('route', () => {
     expect(route('/', null, [])).toEqual({ page: 'landing' });
   });
 
+  it('opens the create page from an invite link', () => {
+    expect(route('/', { kind: 'invite', code: 'ABCDE-23456' }, [])).toEqual({ page: 'create', invite: 'ABCDE-23456' });
+    expect(route('/creer', null, [])).toEqual({ page: 'create', invite: null });
+  });
+
+  it('has the admin and restore pages', () => {
+    expect(route('/admin', null, []).page).toBe('admin');
+    expect(route('/restaurer', null, []).page).toBe('restore');
+  });
+
   it('sends unknown paths to not-found', () => {
     expect(route('/nope', null, []).page).toBe('not-found');
   });

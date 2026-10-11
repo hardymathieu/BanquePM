@@ -11,10 +11,10 @@ function checkRoot(root: Uint8Array): void {
 const LISTS = { en: english, fr: french } as const;
 
 /** Lowercase, no accents, so "Agreable", "agréable" and its NFD form all match. */
-const fold = (w: string) => w.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+export const foldWord = (w: string) => w.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 
 const FOLDED = Object.fromEntries(
-  Object.entries(LISTS).map(([locale, list]) => [locale, new Map(list.map((w) => [fold(w), w]))]),
+  Object.entries(LISTS).map(([locale, list]) => [locale, new Map(list.map((w) => [foldWord(w), w]))]),
 ) as Record<keyof typeof LISTS, Map<string, string>>;
 
 /** 12 BIP39 words, NFC-normalized for display. */
@@ -35,7 +35,7 @@ export type WordsResult =
  * are in both lists, so the restore flow tries each root until one exists.
  */
 export function rootsFromWords(input: string): WordsResult {
-  const words = input.trim().split(/\s+/).filter(Boolean).map(fold);
+  const words = input.trim().split(/\s+/).filter(Boolean).map(foldWord);
   if (words.length !== 12) return { ok: false, error: 'count', count: words.length };
 
   const unknown = words.flatMap((w, i) => (FOLDED.en.has(w) || FOLDED.fr.has(w) ? [] : [i]));
@@ -52,4 +52,17 @@ export function rootsFromWords(input: string): WordsResult {
     }
   }
   return roots.length ? { ok: true, roots } : { ok: false, error: 'checksum' };
+}
+
+/** True when a typed word is the expected one, whatever the case or accents. */
+export const sameWord = (expected: string, typed: string): boolean => foldWord(expected) === foldWord(typed.trim());
+
+const ALL = [...new Set([...french, ...english].map((w) => w.normalize('NFC')))].map((w) => ({ w, f: foldWord(w) }));
+
+/** Up to `limit` words from both lists starting with `prefix` (accents and case ignored), exact match first. */
+export function suggestWords(prefix: string, limit: number): string[] {
+  const p = foldWord(prefix.trim());
+  if (!p) return [];
+  const hits = ALL.filter((x) => x.f.startsWith(p)).sort((a, b) => Number(b.f === p) - Number(a.f === p) || a.f.length - b.f.length);
+  return hits.slice(0, limit).map((x) => x.w);
 }

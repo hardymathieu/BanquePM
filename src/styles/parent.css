@@ -1,12 +1,12 @@
 /* Parent app, after design/parent-view.html. */
-main.parent { --mine-soft: #E3ECFA; --on-mine: #FFFFFF; --on-out: #FFFFFF; max-width: 480px; margin: 0 auto; padding: 16px 16px 60px; font-size: 16px; line-height: 1.45; }
+main.parent, main.onboard { --mine-soft: #E3ECFA; --on-mine: #FFFFFF; --on-out: #FFFFFF; max-width: 480px; margin: 0 auto; padding: 16px 16px 60px; font-size: 16px; line-height: 1.45; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) main.parent { --mine: #6E9BEF; --mine-soft: #1E2F57; --on-mine: #0F1830; --on-out: #0F1830; }
+  :root:not([data-theme="light"]) main.parent, :root:not([data-theme="light"]) main.onboard { --mine: #6E9BEF; --mine-soft: #1E2F57; --on-mine: #0F1830; --on-out: #0F1830; }
 }
-:root[data-theme="dark"] main.parent { --mine: #6E9BEF; --mine-soft: #1E2F57; --on-mine: #0F1830; --on-out: #0F1830; }
-.parent h2, .parent h3 { margin: 0; }
-.parent input, .parent select { font: inherit; color: inherit; }
-.parent ul { list-style: none; margin: 0; padding: 0; }
+:root[data-theme="dark"] main.parent, :root[data-theme="dark"] main.onboard { --mine: #6E9BEF; --mine-soft: #1E2F57; --on-mine: #0F1830; --on-out: #0F1830; }
+.parent h2, .parent h3, .onboard h2, .onboard h3 { margin: 0; }
+.parent input, .parent select, .onboard input, .onboard select { font: inherit; color: inherit; }
+.parent ul, .onboard ul, .onboard ol { list-style: none; margin: 0; padding: 0; }
 
 .parent .app { font-size: 15px; color: var(--ink-2); }
 .kids { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
@@ -19,10 +19,10 @@ main.parent { --mine-soft: #E3ECFA; --on-mine: #FFFFFF; --on-out: #FFFFFF; max-w
 .sum .val { font-size: 44px; font-weight: 800; letter-spacing: -.02em; line-height: 1.05; font-variant-numeric: tabular-nums; }
 .sum a { font-size: 15px; color: var(--mine); font-weight: 600; white-space: nowrap; padding: 8px 0; }
 
-.parent section { margin-top: 26px; }
-.parent h2 { font-size: 20px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: baseline; gap: 8px; }
+.parent section, .onboard section { margin-top: 26px; }
+.parent h2, .onboard h2 { font-size: 20px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: baseline; gap: 8px; }
 .parent h2 .count { font-size: 15px; font-weight: 800; background: var(--coin); color: #2a1f00; border-radius: 999px; padding: 1px 9px; }
-.parent .sub { color: var(--ink-2); margin-bottom: 12px; font-size: 15px; }
+.parent .sub, .onboard .sub { color: var(--ink-2); margin-bottom: 12px; font-size: 15px; }
 .card { background: var(--card); border-radius: 14px; padding: 14px; }
 .parent .notice { margin-top: 40px; font-size: 18px; }
 

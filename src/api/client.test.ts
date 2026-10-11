@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { deleteBlob, getBlob, postBlob, putBlob } from './client';
+import { deleteBlob, getBlob, mintInvite, postBlob, putBlob } from './client';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -89,5 +89,22 @@ describe('deleteBlob', () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response(null, { status: 204 })));
     expect(await deleteBlob('ID', 'T')).toEqual({ ok: true });
     expect(vi.mocked(fetch).mock.calls[0]![1]).toMatchObject({ method: 'DELETE' });
+  });
+});
+
+describe('mintInvite', () => {
+  it('sends the admin token and the days, and returns the code', async () => {
+    respond(201, { code: 'ABCDE-23456', expiresOn: '2026-10-24' });
+    expect(await mintInvite('ADMIN', 14)).toEqual({ ok: true, code: 'ABCDE-23456', expiresOn: '2026-10-24' });
+    const init = vi.mocked(fetch).mock.calls[0]![1]!;
+    expect(new Headers(init.headers).get('Authorization')).toBe('Bearer ADMIN');
+    expect(init.body).toBe(JSON.stringify({ days: 14 }));
+  });
+
+  it('tells a wrong token from a disabled admin', async () => {
+    respond(401, { error: 'bad_token' });
+    expect(await mintInvite('x', 14)).toEqual({ ok: false, error: 'bad_token' });
+    respond(503, { error: 'admin_disabled' });
+    expect(await mintInvite('x', 14)).toEqual({ ok: false, error: 'admin_disabled' });
   });
 });

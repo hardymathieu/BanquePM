@@ -45,3 +45,20 @@ export function moveKid(family: FamilyDoc, slot: number): { family: FamilyDoc; f
 export function markChanged(family: FamilyDoc): FamilyDoc {
   return { ...family, backup: { ...family.backup, changesSinceExport: family.backup.changesSinceExport + 1 } };
 }
+
+export function newFamily(kid: KidDoc, today: IsoDate, locale: 'fr' | 'en'): FamilyDoc {
+  return {
+    format: 'bpm-family',
+    v: 1,
+    createdOn: today,
+    kids: [{ slot: 0, doc: kid }],
+    nextSlot: 1,
+    backup: { lastExportOn: null, changesSinceExport: 0 },
+    prefs: { locale },
+    recovery: { confirmedOn: null },
+  };
+}
+
+export function confirmRecovery(family: FamilyDoc, today: IsoDate): FamilyDoc {
+  return { ...family, recovery: { confirmedOn: today } };
+}

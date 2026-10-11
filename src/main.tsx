@@ -6,6 +6,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/kid.css';
 import './styles/parent.css';
+import './styles/onboard.css';
 import { render } from 'preact';
 import { toBase64url } from './crypto/base64url';
 import { parseFragment } from './crypto/links';
@@ -27,6 +28,7 @@ if (fragment?.kind === 'parent') {
   setParent(toBase64url(fragment.root));
   history.replaceState(null, '', '/parent');
 }
+if (fragment?.kind === 'invite') history.replaceState(null, '', '/creer');
 
 render(<App route={route(location.pathname, fragment, getKids())} />, document.getElementById('app')!);
 

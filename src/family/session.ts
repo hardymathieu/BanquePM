@@ -47,6 +47,8 @@ export class FamilySession {
   /** What this session last published per slot. Unknown at start, so the first save publishes every kid. */
   private published = new Map<number, string>();
   private queue: Promise<unknown> = Promise.resolve();
+  /** Slots that appeared in this session (new kid, revocation): their blob is created, not updated. */
+  private newSlots = new Set<number>();
 
   private constructor(
     readonly root: Uint8Array,
@@ -74,6 +76,7 @@ export class FamilySession {
     const res = await api.postBlob({ id: keys.id, writeHash: keys.writeHash, ct }, { invite });
     if (!res.ok) return { ok: false, error: res.error };
     const session = new FamilySession(root, keys, api, family, res.version);
+    for (const k of family.kids) session.newSlots.add(k.slot);
     await session.publishAll(today);
     return { ok: true, session };
   }
@@ -111,6 +114,8 @@ export class FamilySession {
       const res = await this.api.putBlob(this.keys.id, this.keys.writeToken, this.version, ct);
       if (!res.ok && res.error === 'conflict') continue;
       if (!res.ok) return { ok: false, error: writeError(res.error) };
+      const before = new Set(this.family.kids.map((k) => k.slot));
+      for (const k of next.kids) if (!before.has(k.slot)) this.newSlots.add(k.slot);
       this.family = next;
       this.version = res.version;
       await this.publishAll(today);
@@ -131,12 +136,22 @@ export class FamilySession {
   private async publishKid(slot: number, doc: KidDoc, today: IsoDate): Promise<boolean> {
     const k = await this.kid(slot);
     const ct = toBase64url(await seal(k.key, k.id, projectForKid(doc, today)));
+    const create = () => this.api.postBlob({ id: k.id, writeHash: k.writeHash, ct }, { parentId: this.keys.id, familyToken: this.keys.writeToken });
+    if (this.newSlots.has(slot)) {
+      const created = await create();
+      if (created.ok || created.error !== 'exists') {
+        if (created.ok) {
+          this.newSlots.delete(slot);
+          this.kidVersions.set(slot, created.version);
+        }
+        return created.ok;
+      }
+      this.newSlots.delete(slot); // it exists after all: update it below
+    }
     let res = await this.api.putBlob(k.id, k.writeToken, this.kidVersions.get(slot) ?? 1, ct);
     // The family blob was just saved, so this projection is the latest: overwrite whatever version is there.
     if (!res.ok && res.error === 'conflict' && 'version' in res) res = await this.api.putBlob(k.id, k.writeToken, res.version, ct);
-    if (!res.ok && res.error === 'not_found') {
-      res = await this.api.postBlob({ id: k.id, writeHash: k.writeHash, ct }, { parentId: this.keys.id, familyToken: this.keys.writeToken });
-    }
+    if (!res.ok && res.error === 'not_found') res = await create();
     if (res.ok) this.kidVersions.set(slot, res.version);
     return res.ok;
   }

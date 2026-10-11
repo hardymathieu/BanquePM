@@ -36,7 +36,7 @@ const deposit = (id: string, amount = 5) => (f: FamilyDoc) => updateKid(f, 0, (d
 describe('createFamily', () => {
   it('stores the family blob, then publishes each kid blob', async () => {
     const { server, root } = await setup();
-    expect(server.log.map((l) => l.split(' ')[0])).toEqual(['POST', 'PUT', 'POST']); // kid PUT 404 → POST
+    expect(server.log.map((l) => l.split(' ')[0])).toEqual(['POST', 'POST']); // a new kid is created, not first PUT
     expect((await kidBlob(server, root, 0))?.kid.name).toBe('Léa');
   });
 });
@@ -136,6 +136,15 @@ describe('save (SPEC §9.3)', () => {
     const results = await Promise.all([session.save(deposit('a'), TODAY), session.save(deposit('b'), TODAY)]);
     expect(results).toEqual([{ ok: true }, { ok: true }]);
     expect(session.family.kids[0]!.doc.moves.map((m) => m.id)).toEqual(['a', 'b']);
+  });
+});
+
+describe('new kids', () => {
+  it('creates the kid blob of a kid added in this save directly', async () => {
+    const { server, session } = await setup();
+    server.log.length = 0;
+    await session.save((f) => addKid(f, newKidDoc({ name: 'Tom', birthday: null, allowance: 2, weekday: 0, apr: 0.12 }, TODAY)).family, TODAY);
+    expect(server.log.map((l) => l.split(' ')[0])).toEqual(['PUT', 'POST']);
   });
 });
 

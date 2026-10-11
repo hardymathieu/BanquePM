@@ -39,6 +39,8 @@ export type FamilyDoc = {
   prefs: { locale: 'fr' | 'en' };
   /** Next unused kid slot. Slots are never reused, so a revoked link can never show another kid. */
   nextSlot?: number;
+  /** When the 12 recovery words were checked (SPEC §10.4, §11 monthly tip). Absent in older docs. */
+  recovery?: { confirmedOn: IsoDate | null };
 };
 
 export type KidMove = Omit<Move, 'privateNote'>;

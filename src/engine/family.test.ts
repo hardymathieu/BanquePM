@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addKid, freeSlot, markChanged, moveKid, newKidDoc, updateKid } from './family';
+import { addKid, confirmRecovery, freeSlot, markChanged, moveKid, newFamily, newKidDoc, updateKid } from './family';
 import type { FamilyDoc } from './types';
 
 const lea = newKidDoc({ name: 'Léa', birthday: null, allowance: 2, weekday: 0, apr: 0.12 }, '2026-10-10');
@@ -58,5 +58,19 @@ describe('updateKid and markChanged', () => {
 
   it('counts changes since the last export', () => {
     expect(markChanged(family()).backup.changesSinceExport).toBe(1);
+  });
+});
+
+describe('newFamily (SPEC §10.2)', () => {
+  it('holds the first kid on slot 0, no backup yet, words not confirmed', () => {
+    const f = newFamily(lea, '2026-10-10', 'fr');
+    expect(f).toEqual({
+      format: 'bpm-family', v: 1, createdOn: '2026-10-10', kids: [{ slot: 0, doc: lea }], nextSlot: 1,
+      backup: { lastExportOn: null, changesSinceExport: 0 }, prefs: { locale: 'fr' }, recovery: { confirmedOn: null },
+    });
+  });
+
+  it('records when the recovery words were confirmed', () => {
+    expect(confirmRecovery(newFamily(lea, '2026-10-10', 'fr'), '2026-10-12').recovery).toEqual({ confirmedOn: '2026-10-12' });
   });
 });

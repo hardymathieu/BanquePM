@@ -100,7 +100,7 @@ export function ParentHome({ family, session, save, revoke, reload }: Props) {
           </section>
           <History key={`h${kid.slot}`} ctx={ctx} />
           <Settings key={`s${kid.slot}`} ctx={ctx} />
-          <Sharing key={`l${kid.slot}`} ctx={ctx} session={session} revoke={revoke} open={shareOpen} onToggle={setShareOpen} />
+          <Sharing key={`l${kid.slot}`} ctx={ctx} family={family} session={session} save={save} revoke={revoke} open={shareOpen} onToggle={setShareOpen} />
         </>
       )}
 

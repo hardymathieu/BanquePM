@@ -8,6 +8,10 @@ export type Route =
   | { page: 'kid'; id: string; key: Uint8Array; remember: boolean }
   | { page: 'parent'; root: Uint8Array | null }
   | { page: 'landing' }
+  /** `adminToken` comes from /admin, in memory only: the owner's own bank (SPEC §10.1). */
+  | { page: 'create'; invite: string | null; adminToken?: string }
+  | { page: 'restore' }
+  | { page: 'admin' }
   | { page: 'not-found' };
 
 /** "Voir comme Léa" from the parent app: the kid view, leaving no trace on the device. */
@@ -16,7 +20,11 @@ export const PREVIEW = '/apercu';
 export function route(path: string, fragment: Fragment | null, storedKids: StoredKid[]): Route {
   if (fragment?.kind === 'kid') return { page: 'kid', id: fragment.id, key: fragment.key, remember: path !== PREVIEW };
   if (fragment?.kind === 'parent') return { page: 'parent', root: fragment.root };
+  if (fragment?.kind === 'invite') return { page: 'create', invite: fragment.code };
   if (path === '/parent') return { page: 'parent', root: null };
+  if (path === '/creer') return { page: 'create', invite: null };
+  if (path === '/restaurer') return { page: 'restore' };
+  if (path === '/admin') return { page: 'admin' };
   if (path !== '/') return { page: 'not-found' };
   for (const kid of storedKids) {
     const key = fromBase64url(kid.key);
@@ -24,3 +32,13 @@ export function route(path: string, fragment: Fragment | null, storedKids: Store
   }
   return { page: 'landing' };
 }
+
+export const PATHS: Record<Route['page'], string> = {
+  kid: '/',
+  parent: '/parent',
+  landing: '/',
+  create: '/creer',
+  restore: '/restaurer',
+  admin: '/admin',
+  'not-found': '/',
+};

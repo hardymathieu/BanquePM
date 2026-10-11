@@ -1,0 +1,43 @@
+/* Landing, create, restore, admin, and the recovery card. Shares parent.css components. */
+main.onboard h1 { font-size: 28px; font-weight: 800; line-height: 1.2; margin: 18px 0 12px; }
+.onboard .lede { font-size: 18px; color: var(--ink); }
+.onboard .promise { margin-top: 14px; padding: 12px 14px; border-left: 4px solid var(--mine); background: var(--card); border-radius: 0 10px 10px 0; color: var(--ink-2); }
+.onboard .actions { margin-top: 18px; }
+.onboard > .hint { margin-top: 18px; font-size: 15px; }
+.onboard .card + .btn { margin-top: 16px; }
+.subhead { font-size: 17px; font-weight: 800; margin-top: 22px; }
+.recovery { margin-top: 8px; }
+.recovery h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+
+/* 12 words, numbered, in 3 columns */
+.words { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; counter-reset: w; }
+.words li { background: var(--card); border-radius: 8px; padding: 6px 8px; font-size: 15px; font-weight: 600; counter-increment: w; overflow-wrap: anywhere; }
+.words li::before { content: counter(w) ". "; color: var(--ink-3); font-size: 13px; font-weight: 400; }
+.card .words li { background: var(--paper); }
+
+.word-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; counter-reset: w; }
+.word-inputs li { counter-increment: w; display: flex; align-items: center; gap: 4px; }
+.word-inputs li::before { content: counter(w) "."; color: var(--ink-3); font-size: 13px; min-width: 20px; text-align: right; }
+.word-inputs input { width: 100%; min-width: 0; border: 2px solid var(--rule); border-radius: 10px; padding: 8px; background: var(--paper); min-height: 44px; font-size: 15px; }
+.word-inputs input:focus { border-color: var(--mine); outline: none; }
+
+.minted { margin-top: 16px; }
+.minted .code { font-size: 30px; font-weight: 800; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
+.stack { display: grid; gap: 8px; }
+
+/* The printed recovery card (SPEC §10.4): shown only on paper. */
+.print-card { display: none; }
+@media print {
+  @page { margin: 14mm; }
+  body { background: #fff; color: #000; }
+  body > *:not(.print-card) { display: none !important; }
+  .print-card { display: block; font-family: var(--sans); color: #000; max-width: 150mm; }
+  .print-card h1 { font-size: 22pt; margin: 0 0 4mm; }
+  .print-card p { margin: 0 0 3mm; font-size: 11pt; }
+  .print-words { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm 6mm; margin: 6mm 0; padding: 0; list-style: none; counter-reset: w; }
+  .print-words li { counter-increment: w; font-size: 15pt; font-weight: 600; border-bottom: .3mm solid #999; padding: 1mm 0; }
+  .print-words li::before { content: counter(w) ". "; font-weight: 400; font-size: 10pt; color: #555; }
+  .print-qr { display: flex; gap: 6mm; align-items: center; margin: 6mm 0; }
+  .print-qr .qr { width: 38mm; height: 38mm; }
+  .print-keep { font-weight: 700; border: .4mm solid #000; padding: 3mm; }
+}

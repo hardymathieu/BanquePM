@@ -1,11 +1,23 @@
-// Placeholder until milestone 6 (landing, invite, restore, open a backup).
+// Page: "/" when this device remembers no kid (SPEC §2).
 import { useI18n } from '../../i18n';
+import { getParent } from '../../store/device';
+import { useNav } from '../nav';
 
 export default function Landing() {
   const { t } = useI18n();
+  const go = useNav();
+  const hasParent = getParent() !== null;
   return (
-    <main class="kid">
-      <h1 class="landing-title">{t.app.name}</h1>
+    <main class="onboard">
+      <h1>{t.app.name}</h1>
+      <p class="lede">{t.landing.lede}</p>
+      <p class="promise">{t.landing.promise}</p>
+      <div class="actions">
+        {hasParent && <button type="button" class="btn" onClick={() => go({ page: 'parent', root: null })}>{t.landing.openParent}</button>}
+        <button type="button" class={hasParent ? 'btn ghosty' : 'btn'} onClick={() => go({ page: 'create', invite: null })}>{t.landing.invite}</button>
+        <button type="button" class="btn ghosty" onClick={() => go({ page: 'restore' })}>{t.landing.restore}</button>
+      </div>
+      <p class="hint">{t.landing.kidHint}</p>
     </main>
   );
 }

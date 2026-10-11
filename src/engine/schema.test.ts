@@ -83,3 +83,15 @@ describe('parseFamilyDoc', () => {
     expect(parseFamilyDoc(doc)).toBeNull();
   });
 });
+
+describe('parseFamilyDoc, recovery', () => {
+  const base = {
+    format: 'bpm-family', v: 1, createdOn: '2025-01-01', kids: [],
+    backup: { lastExportOn: null, changesSinceExport: 0 }, prefs: { locale: 'fr' },
+  };
+  it('accepts an optional recovery.confirmedOn', () => {
+    expect(parseFamilyDoc({ ...base, recovery: { confirmedOn: null } })).not.toBeNull();
+    expect(parseFamilyDoc({ ...base, recovery: { confirmedOn: '2026-10-10' } })).not.toBeNull();
+    expect(parseFamilyDoc({ ...base, recovery: { confirmedOn: 'yes' } })).toBeNull();
+  });
+});

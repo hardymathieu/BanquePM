@@ -4,7 +4,7 @@ A free, open-source "virtual savings account" that parents run for their kids. P
 
 Built around one promise: **whoever hosts it can know nothing.** No accounts, no emails, no passwords, no logs, no analytics. Everything is end-to-end encrypted in the browser, and the server stores only blobs it cannot read.
 
-> **Status: early development.** The calculation engine, crypto, the server, the kid view and the parent app are done. Onboarding is next. A Deploy to Cloudflare button and the full French and English README come with v1.
+> **Status: early development.** The engine, crypto, server, kid view, parent app and onboarding (invites, recovery card, restore with words) are done. Backups are next. A Deploy to Cloudflare button and the full French and English README come with v1.
 
 ## Development
 

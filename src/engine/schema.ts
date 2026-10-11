@@ -54,5 +54,6 @@ export function parseFamilyDoc(v: unknown): FamilyDoc | null {
   if (nextSlot !== undefined && !(isSlot(nextSlot) && slots.every((s) => s < nextSlot))) return null;
   if (!isObj(backup) || !isDateOrNull(backup.lastExportOn) || !isSlot(backup.changesSinceExport)) return null;
   if (!isObj(prefs) || (prefs.locale !== 'fr' && prefs.locale !== 'en')) return null;
+  if (v.recovery !== undefined && !(isObj(v.recovery) && isDateOrNull(v.recovery.confirmedOn))) return null;
   return v as FamilyDoc;
 }
