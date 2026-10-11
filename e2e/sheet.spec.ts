@@ -1,6 +1,7 @@
 // Google Sheet import (SPEC §12): CSV → summary → bank, against a real local Worker.
 import { writeFileSync } from 'node:fs';
-import { expect, type Page, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import rows from '../fixtures/sheet-a.json' with { type: 'json' };
 import { E2E_ADMIN_TOKEN } from '../playwright.config';
 import { importRows, importSummary, parseSheetCsv } from '../src/engine/importSheet';

@@ -90,7 +90,7 @@ export function ParentHome({ family, session, save, revoke, act, reload }: Props
 
   return (
     <main class="parent">
-      <p class="app">{t.parent.appTitle}</p>
+      <h1 class="app">{t.parent.appTitle}</h1>
       <div class="kids" role="group" aria-label={t.parent.kidsGroup}>
         {family.kids.map((k) => (
           <button key={k.slot} type="button" class="kid-tab" aria-pressed={k.slot === kid?.slot} onClick={() => setSelected(k.slot)}>

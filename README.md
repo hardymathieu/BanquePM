@@ -57,6 +57,7 @@ cp .dev.vars.example .dev.vars   # then set ADMIN_TOKEN to 32+ random characters
 npm run dev              # then, in another terminal: npm run seed (a fictional demo bank)
 npx playwright install chromium  # once
 npm run e2e              # end-to-end tests, phone size, light and dark
+npm run verify           # everything: typecheck, unit, dist check, end-to-end
 python3 fixtures/engine_reference.py   # reference implementation of the interest maths
 ```
 

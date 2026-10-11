@@ -1,5 +1,6 @@
 // Parent app against a real local Worker (SPEC §9, §16 E2E 2 and 5).
-import { expect, type Page, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { addDays } from '../src/engine/dates';
 import { balanceOn, computeSeries } from '../src/engine/ledger';
 import { pendingDays } from '../src/engine/schedule';

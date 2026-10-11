@@ -1,5 +1,5 @@
 // Kid view against a real local Worker (SPEC §8, §16 E2E 3 and 5).
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { kidNumbers } from '../src/engine/kidNumbers';
 import { projectForKid } from '../src/engine/project';
 import { formatter } from '../src/i18n/format';

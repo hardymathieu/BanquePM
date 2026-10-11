@@ -4,7 +4,7 @@ main.kid { max-width: 460px; margin: 0 auto; padding: 20px 16px 40px; }
 .landing-title { font-size: 28px; font-weight: 800; margin-top: 40px; }
 .stale { margin-bottom: 14px; padding: 8px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--warn-ink); font-size: 15px; }
 
-.hello { font-family: var(--hand); font-size: 24px; color: var(--ink-2); }
+.hello { font-family: var(--hand); font-size: 24px; font-weight: 400; color: var(--ink-2); margin: 0; }
 .balance { display: flex; align-items: baseline; gap: 2px; margin: 2px 0 6px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .balance .eur { font-size: 72px; line-height: 1; }
 .balance .cts { font-size: 32px; align-self: flex-start; margin-top: 8px; }

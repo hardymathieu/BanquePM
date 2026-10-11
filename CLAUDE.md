@@ -44,15 +44,18 @@ npm run deploy       # vite build + d1 migrations apply DB --remote + wrangler d
 npm run types        # regenerate worker-configuration.d.ts after changing wrangler.jsonc
 npm run icons        # re-render public/icons/*.png and favicon.svg from scripts/icons.mjs
 npm run e2e          # playwright against a production build in wrangler dev, 390×844, light + dark
+npm run check:dist   # build + no foreign URLs, CSP present, service worker sane, size budgets
+npm run lighthouse   # Lighthouse scores for the kid view and parent home (demo bank)
+npm run verify       # typecheck + unit + check:dist + e2e: run before saying anything is done
 python3 fixtures/engine_reference.py   # prints the reference test vectors
 ```
 
 ## Before you say a milestone is done
 
-- `npm test` and `npm run typecheck` pass, and for UI milestones `npm run e2e` passes too.
+- `npm run verify` passes (typecheck, unit, dist check, e2e). Every e2e test already fails on a foreign request or a console error (`e2e/fixtures.ts`).
+- New screens get an axe check in `e2e/a11y.spec.ts`.
 - You opened the screen at 390×844 in light and dark (screenshot) and compared it with the prototype. The e2e tests save screenshots under `test-results/`; render the prototype the same way into the scratchpad, never into the repo.
-- `grep -R "console\." worker/` is empty.
-- In the network tab (or a Playwright request log), no request goes to another origin.
+- `grep -R "console\." worker/` is empty (also a test).
 
 ## Data caution
 

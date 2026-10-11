@@ -18,7 +18,10 @@
     "types": "wrangler types",
     "seed": "tsx scripts/seed.ts",
     "e2e": "playwright test",
-    "icons": "node scripts/icons.mjs"
+    "icons": "node scripts/icons.mjs",
+    "lighthouse": "tsx scripts/lighthouse.ts",
+    "check:dist": "vite build && node scripts/check-dist.mjs",
+    "verify": "npm run typecheck && npm test && npm run check:dist && npm run e2e"
   },
   "cloudflare": {
     "bindings": {
@@ -38,10 +41,12 @@
     "uqr": "^0.1.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@cloudflare/vitest-plugin": "^1.4.0",
     "@playwright/test": "^1.64.0",
     "@preact/preset-vite": "^2.10.6",
     "@types/node": "^26.6.5",
+    "lighthouse": "^13.5.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",

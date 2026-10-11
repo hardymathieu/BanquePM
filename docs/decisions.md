@@ -138,3 +138,16 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
   - The offline e2e test (SPEC §16 E2E 3) fails when registration is removed, so it measures the real thing.
 - **Privacy page** (`/confidentialite`): every point of SPEC §14, plus "Sur ce téléphone" (what `localStorage` holds and how to erase it) and a link to the source code. It is linked from the landing page, kid view, picker and parent home.
 - **README** (French, then English): what it is, the privacy promise, the Deploy to Cloudflare button, `ADMIN_TOKEN`, first steps via `/admin`, `INSTANCE_CONTACT`, updating by syncing the fork, and development. `package.json` → `cloudflare.bindings` describes `ADMIN_TOKEN` and `DB` in the Deploy form. `wrangler deploy --dry-run` passes (12.7 KiB Worker). The button itself still has to be tried once in a real Cloudflare account.
+
+## Final checks (milestone 10)
+
+- **Two light-theme tokens darkened** for WCAG AA small text, as found by axe:
+  - `--ink-3` `#6B7590` → `#636D87` (4.6:1 on the page background, 5.2:1 on cards; the old value was 4.1:1 on the background);
+  - `--coin-deep` `#9C7410` → `#8A6400` (5.4:1 on cards; this is the parent prototype's value).
+  Dark-theme tokens are unchanged.
+- **Headings.** The kid greeting ("Bonjour Léa !") and the parent app title are `h1` (same look). The word check's title is `h2`, so heading levels never skip.
+- **The big balance** has `role="img"` with its `aria-label` (an `aria-label` on a plain `<p>` is not allowed), so screen readers read "289,15 €" once.
+- **A `<meta name="description">`** was added (SEO 82 → 91). Nothing personal is ever in the HTML.
+- **The e2e guard** (`e2e/fixtures.ts`) wraps every test: no foreign request, no console error, no uncaught exception. It was checked with a planted external image.
+- **`npm run check:dist`** checks the build: absolute URLs allowlisted, CSP present, `sw.js` sane, gzipped size budgets (kid first-load JS ≤ 45 KiB, currently 30.9; all JS ≤ 150 KiB, currently 76.1; CSS ≤ 10 KiB, currently 4.8). It was checked with a planted Google Fonts link.
+- **Lighthouse** (`npm run lighthouse`): kid view and parent home both score accessibility 100, best practices 100, performance 100, SEO 91.

@@ -34,8 +34,8 @@ export function KidScreen({ doc, today, staleSince, embedded = false, onSwitchKi
   return (
     <Root class="kid">
       {staleSince && <p class="stale">{t.kid.stale(f.dateLong(staleSince))}</p>}
-      <p class="hello">{t.kid.hello(doc.kid.name)}</p>
-      <p class="balance" aria-label={f.money(numbers.balance)}>
+      {embedded ? <p class="hello">{t.kid.hello(doc.kid.name)}</p> : <h1 class="hello">{t.kid.hello(doc.kid.name)}</h1>}
+      <p class="balance" role="img" aria-label={f.money(numbers.balance)}>
         <span class="eur" aria-hidden="true">{parts.euros}</span>
         <span class="cts" aria-hidden="true">,{parts.cents}</span>
         <span class="sym" aria-hidden="true">€</span>

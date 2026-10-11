@@ -8,7 +8,7 @@ main.parent, main.onboard { --mine-soft: #E3ECFA; --on-mine: #FFFFFF; --on-out: 
 .parent input, .parent select, .onboard input, .onboard select { font: inherit; color: inherit; }
 .parent ul, .onboard ul, .onboard ol { list-style: none; margin: 0; padding: 0; }
 
-.parent .app { font-size: 15px; color: var(--ink-2); }
+.parent .app { font-size: 15px; font-weight: 400; color: var(--ink-2); margin: 0; }
 .kids { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 .kid-tab { border: 2px solid var(--rule); background: var(--card); color: var(--ink); border-radius: 999px; padding: 6px 14px; font-weight: 600; cursor: pointer; min-height: 40px; }
 .kid-tab[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--paper); }

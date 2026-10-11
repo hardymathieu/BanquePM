@@ -76,7 +76,7 @@ function WordCheck({ words, onOk, onBack }: { words: string[]; onOk: () => void;
       }}
       autocomplete="off"
     >
-      <h3>{t.recovery.checkTitle}</h3>
+      <h2>{t.recovery.checkTitle}</h2>
       <p class="sub">{t.recovery.checkSub}</p>
       {positions.map((p, i) => (
         <div class="field" key={p}>

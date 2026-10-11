@@ -1,6 +1,7 @@
 // Backups, import, offline viewer and deletion (SPEC §4.3, §9.5, §11, §16 E2E 4).
 import { readFileSync, writeFileSync } from 'node:fs';
-import { expect, type Page, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { E2E_ADMIN_TOKEN } from '../playwright.config';
 import { balanceOn, computeSeries } from '../src/engine/ledger';
 import { formatter } from '../src/i18n/format';

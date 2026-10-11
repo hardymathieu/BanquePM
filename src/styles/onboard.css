@@ -7,7 +7,7 @@ main.onboard h1 { font-size: 28px; font-weight: 800; line-height: 1.2; margin: 1
 .onboard .card + .btn { margin-top: 16px; }
 .subhead { font-size: 17px; font-weight: 800; margin-top: 22px; }
 .recovery { margin-top: 8px; }
-.recovery h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+.recovery h2, .recovery h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
 
 /* 12 words, numbered, in 3 columns */
 .words { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; counter-reset: w; }

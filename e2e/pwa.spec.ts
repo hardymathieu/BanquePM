@@ -1,5 +1,5 @@
 // Installable app, offline after the first visit, kid picker, privacy page (SPEC §10.3, §14, §16 E2E 3).
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { E2E_CONTACT } from '../playwright.config';
 import { demoBank, watch } from './helpers';
 

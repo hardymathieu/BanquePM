@@ -1,7 +1,7 @@
 /* SPEC §13 tokens. The theme follows the OS and can be forced with data-theme. */
 :root {
-  --paper: #EEF4F1; --card: #FFFFFF; --ink: #18244A; --ink-2: #4A5675; --ink-3: #6B7590;
-  --rule: #D3DFDA; --mine: #2E63C7; --ghost: #B07F00; --coin: #D9A93A; --coin-deep: #9C7410;
+  --paper: #EEF4F1; --card: #FFFFFF; --ink: #18244A; --ink-2: #4A5675; --ink-3: #636D87;
+  --rule: #D3DFDA; --mine: #2E63C7; --ghost: #B07F00; --coin: #D9A93A; --coin-deep: #8A6400;
   --silver: #C9D1D6; --out: #8A3B6E; --grid: #DCE6E2;
   --warn-bg: #FBF1D6; --warn-ink: #6B4E00;
   --hand: 'Patrick Hand', 'Comic Neue', cursive;

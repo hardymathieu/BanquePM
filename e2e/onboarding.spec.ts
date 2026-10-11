@@ -1,5 +1,6 @@
 // Onboarding against a real local Worker (SPEC §10, §16 E2E 1 and 4).
-import { expect, type Page, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { E2E_ADMIN_TOKEN } from '../playwright.config';
 import { watch } from './helpers';
 
