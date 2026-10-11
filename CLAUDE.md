@@ -55,4 +55,6 @@ python3 fixtures/engine_reference.py   # prints the reference test vectors
 
 ## Data caution
 
-This repo is public. `fixtures/sheet-a.json` holds real dates and amounts without names or notes; the owner chose to keep it. Nothing else personal may be committed.
+This repo is public. `fixtures/sheet-a.json` holds real dates and amounts without names or notes; the owner chose to keep it. Nothing else personal may be committed, not even when quoting the spec (its copy uses the real child's name).
+
+`scripts/check-private.sh` checks tracked files and the whole history against `claude_work_banque-papa-maman-spec/private-words.txt` (gitignored). Local `pre-commit` and `pre-push` hooks run it. Run it yourself before any commit or push, and never bypass it with `--no-verify`.
