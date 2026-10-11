@@ -15,6 +15,11 @@ export function kidLink(origin: string, kidId: string, kidKey: Uint8Array): stri
   return `${origin}/#k=${kidId}.${toBase64url(kidKey)}`;
 }
 
+/** "Voir comme Léa": the kid view without remembering the kid on the parent's device. */
+export function kidPreviewLink(origin: string, kidId: string, kidKey: Uint8Array): string {
+  return `${origin}/apercu#k=${kidId}.${toBase64url(kidKey)}`;
+}
+
 function bytesOf(s: string, length: number): Uint8Array | null {
   const b = fromBase64url(s);
   return b && b.length === length ? b : null;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { kidLink, parentLink, parseFragment } from './links';
+import { kidLink, kidPreviewLink, parentLink, parseFragment } from './links';
 
 const ROOT = Uint8Array.from({ length: 16 }, (_, i) => i);
 const KID_KEY = new Uint8Array(32).fill(7);
@@ -12,6 +12,12 @@ describe('links (SPEC §7.1, §7.2)', () => {
   it('builds a kid link from the kid id and key', () => {
     expect(kidLink('https://banque.example', 'ZUhXPd7qFxdyniFMmiyQBg', KID_KEY)).toBe(
       'https://banque.example/#k=ZUhXPd7qFxdyniFMmiyQBg.BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc',
+    );
+  });
+
+  it('builds a preview link on /apercu', () => {
+    expect(kidPreviewLink('https://banque.example', 'ZUhXPd7qFxdyniFMmiyQBg', KID_KEY)).toBe(
+      'https://banque.example/apercu#k=ZUhXPd7qFxdyniFMmiyQBg.BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc',
     );
   });
 

@@ -25,7 +25,8 @@ async function decode(key: CryptoKey, id: string, ct: string): Promise<KidPublic
   }
 }
 
-export function useKidBank(id: string, rawKey: Uint8Array): KidState {
+/** `remember: false` (the parent's preview) leaves nothing on the device. */
+export function useKidBank(id: string, rawKey: Uint8Array, remember = true): KidState {
   const [state, setState] = useState<KidState>({ status: 'loading' });
 
   useEffect(() => {
@@ -33,12 +34,14 @@ export function useKidBank(id: string, rawKey: Uint8Array): KidState {
     let shown: KidPublicDoc | null = null;
     const keyPromise = importBoxKey(rawKey);
     const set = (s: KidState) => alive && setState(s);
-    const remember = (name: string) => saveKid({ id, key: toBase64url(rawKey), name });
+    const store = remember
+      ? { kid: (name: string) => saveKid({ id, key: toBase64url(rawKey), name }), cache: setCache, forget: removeKid, cached: getCache }
+      : { kid: () => undefined, cache: () => undefined, forget: () => undefined, cached: () => null };
 
     async function load() {
       const key = await keyPromise;
       const today = localToday();
-      const cached = getCache(id);
+      const cached = store.cached(id);
       if (!shown && cached) {
         shown = await decode(key, id, cached.ct);
         if (shown) set({ status: 'ready', doc: shown, today, staleSince: null });
@@ -49,12 +52,12 @@ export function useKidBank(id: string, rawKey: Uint8Array): KidState {
         const doc = shown && cached?.version === res.version ? shown : await decode(key, id, res.ct);
         if (!doc) return set({ status: 'error' });
         shown = doc;
-        setCache(id, { version: res.version, ct: res.ct, fetchedOn: today });
-        remember(doc.kid.name);
+        store.cache(id, { version: res.version, ct: res.ct, fetchedOn: today });
+        store.kid(doc.kid.name);
         return set({ status: 'ready', doc, today, staleSince: null });
       }
       if (res.error === 'not_found') {
-        removeKid(id);
+        store.forget(id);
         shown = null;
         return set({ status: 'revoked' });
       }
@@ -70,7 +73,7 @@ export function useKidBank(id: string, rawKey: Uint8Array): KidState {
       alive = false;
       document.removeEventListener('visibilitychange', onVisible);
     };
-  }, [id, rawKey]);
+  }, [id, rawKey, remember]);
 
   return state;
 }

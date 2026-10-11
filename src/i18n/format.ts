@@ -36,6 +36,9 @@ export function formatter(locale: Locale) {
     dateLong: date({ day: 'numeric', month: 'long', year: 'numeric' }),
     dateShort: date({ day: 'numeric', month: 'short', year: 'numeric' }),
     dayMonth: date({ day: 'numeric', month: 'long' }),
+    /** "dim. 4 oct. 2026" */
+    dateWithDay: date({ weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }),
+    year: date({ year: 'numeric' }),
     monthYear: date({ month: 'long', year: 'numeric' }),
     monthShort: date({ month: 'short', year: '2-digit' }),
     weekdayName: (w: Weekday) => weekday(`2023-01-0${1 + w}`),

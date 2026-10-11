@@ -34,6 +34,10 @@ describe('format (fr-BE, SPEC §13)', () => {
     expect(f.dateLong('2026-01-01')).toBe('1 janvier 2026');
   });
 
+  it('formats a date with its weekday for the parent livret', () => {
+    expect(f.dateWithDay('2026-10-04')).toBe('dim. 4 oct. 2026');
+  });
+
   it('names weekdays', () => {
     expect(f.weekdayName(0)).toBe('dimanche');
     expect(f.weekdayName(3)).toBe('mercredi');

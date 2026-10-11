@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { sheetA } from './__fixtures__/sheetA';
 import { projectForKid } from './project';
-import { parseKidPublicDoc } from './schema';
+import { parseFamilyDoc, parseKidPublicDoc } from './schema';
 
 const good = () => JSON.parse(JSON.stringify(projectForKid(sheetA(), '2026-10-10'))) as Record<string, any>;
 
@@ -44,5 +44,42 @@ describe('parseKidPublicDoc', () => {
 
   it('rejects non-objects', () => {
     for (const v of [null, 1, 'x', [], undefined]) expect(parseKidPublicDoc(v)).toBeNull();
+  });
+});
+
+describe('parseFamilyDoc', () => {
+  const family = () =>
+    JSON.parse(
+      JSON.stringify({
+        format: 'bpm-family',
+        v: 1,
+        createdOn: '2025-01-01',
+        kids: [{ slot: 0, doc: { ...sheetA(), moves: sheetA().moves.map((m) => ({ ...m, privateNote: 'secret' })) } }],
+        backup: { lastExportOn: null, changesSinceExport: 3 },
+        prefs: { locale: 'fr' },
+      }),
+    ) as Record<string, any>;
+
+  it('accepts a family doc', () => {
+    expect(parseFamilyDoc(family())).toEqual(family());
+  });
+
+  it('accepts an optional nextSlot', () => {
+    expect(parseFamilyDoc({ ...family(), nextSlot: 4 })).not.toBeNull();
+  });
+
+  it.each<[string, (d: Record<string, any>) => void]>([
+    ['another format', (d) => (d.format = 'bpm-kid')],
+    ['a missing privateNote', (d) => delete d.kids[0].doc.moves[0].privateNote],
+    ['a negative slot', (d) => (d.kids[0].slot = -1)],
+    ['a duplicate slot', (d) => d.kids.push(d.kids[0])],
+    ['a bad backup counter', (d) => (d.backup.changesSinceExport = -1)],
+    ['a bad lastExportOn', (d) => (d.backup.lastExportOn = 'hier')],
+    ['an unknown locale', (d) => (d.prefs.locale = 'de')],
+    ['a nextSlot below a used slot', (d) => (d.nextSlot = 0)],
+  ])('rejects %s', (_, mutate) => {
+    const doc = family();
+    mutate(doc);
+    expect(parseFamilyDoc(doc)).toBeNull();
   });
 });

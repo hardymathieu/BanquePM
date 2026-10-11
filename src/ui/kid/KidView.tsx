@@ -4,9 +4,9 @@ import { useI18n } from '../../i18n';
 import { KidScreen } from './KidScreen';
 import { useKidBank } from './useKidBank';
 
-export default function KidView({ id, rawKey }: { id: string; rawKey: Uint8Array }) {
+export default function KidView({ id, rawKey, remember }: { id: string; rawKey: Uint8Array; remember: boolean }) {
   const { t } = useI18n();
-  const state = useKidBank(id, rawKey);
+  const state = useKidBank(id, rawKey, remember);
 
   useEffect(() => {
     document.title = state.status === 'ready' ? t.kid.title(state.doc.kid.name) : t.app.name;

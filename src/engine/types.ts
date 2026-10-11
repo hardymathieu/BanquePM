@@ -37,6 +37,8 @@ export type FamilyDoc = {
   kids: KidRecord[];
   backup: { lastExportOn: IsoDate | null; changesSinceExport: number };
   prefs: { locale: 'fr' | 'en' };
+  /** Next unused kid slot. Slots are never reused, so a revoked link can never show another kid. */
+  nextSlot?: number;
 };
 
 export type KidMove = Omit<Move, 'privateNote'>;

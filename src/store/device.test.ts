@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getCache, getKids, removeKid, saveKid, setCache } from './device';
+import { forgetDevice, forgetParent, getCache, getKids, getParent, removeKid, saveKid, setCache, setParent } from './device';
 
 function memoryStorage(): Storage {
   const m = new Map<string, string>();
@@ -72,5 +72,37 @@ describe('device storage (SPEC §10.3)', () => {
     vi.stubGlobal('localStorage', undefined);
     expect(getKids()).toEqual([]);
     expect(() => saveKid(KID)).not.toThrow();
+  });
+});
+
+describe('parent root (SPEC §10.3)', () => {
+  it('remembers and forgets the parent root', () => {
+    vi.stubGlobal('localStorage', memoryStorage());
+    expect(getParent()).toBeNull();
+    setParent('AAECAwQFBgcICQoLDA0ODw');
+    expect(getParent()).toBe('AAECAwQFBgcICQoLDA0ODw');
+    forgetParent();
+    expect(getParent()).toBeNull();
+  });
+
+  it('"Oublier cet appareil" forgets the parent root, the kids and every cache', () => {
+    const s = memoryStorage();
+    vi.stubGlobal('localStorage', s);
+    setParent('AAECAwQFBgcICQoLDA0ODw');
+    saveKid(KID);
+    setCache(KID.id, { version: 1, ct: 'AQID', fetchedOn: '2026-10-10' });
+    s.setItem('unrelated', 'keep');
+    forgetDevice();
+    expect(getParent()).toBeNull();
+    expect(getKids()).toEqual([]);
+    expect(getCache(KID.id)).toBeNull();
+    expect(s.getItem('unrelated')).toBe('keep');
+  });
+
+  it('survives throwing storage', () => {
+    vi.stubGlobal('localStorage', throwing);
+    expect(() => setParent('x')).not.toThrow();
+    expect(getParent()).toBeNull();
+    expect(() => forgetDevice()).not.toThrow();
   });
 });

@@ -3,7 +3,8 @@
 import { describe, expect, it } from 'vitest';
 import { toBase64url } from './base64url';
 import { open, seal } from './box';
-import { deriveFamily, deriveKid, generateRoot, hkdf, importBoxKey, rootsFromWords, rootToWords, writeHashOf } from './keys';
+import { deriveFamily, deriveKid, generateRoot, hkdf, importBoxKey, writeHashOf } from './keys';
+import { rootsFromWords, rootToWords } from './words';
 
 const ROOT = Uint8Array.from({ length: 16 }, (_, i) => i); // 000102…0f
 const b64 = async (p: Promise<Uint8Array>) => toBase64url(await p);

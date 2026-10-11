@@ -6,7 +6,18 @@ const KEY_TEXT = 'BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc';
 
 describe('route', () => {
   it('opens a kid link on any path', () => {
-    expect(route('/', { kind: 'kid', id: 'abc', key }, [])).toEqual({ page: 'kid', id: 'abc', key });
+    expect(route('/', { kind: 'kid', id: 'abc', key }, [])).toEqual({ page: 'kid', id: 'abc', key, remember: true });
+  });
+
+  it('opens a preview from the parent app without remembering it', () => {
+    expect(route('/apercu', { kind: 'kid', id: 'abc', key }, [])).toEqual({ page: 'kid', id: 'abc', key, remember: false });
+  });
+
+  it('opens the parent app from a parent link, or from storage on /parent', () => {
+    const root = new Uint8Array(16);
+    expect(route('/parent', { kind: 'parent', root }, [])).toEqual({ page: 'parent', root });
+    expect(route('/', { kind: 'parent', root }, [])).toEqual({ page: 'parent', root });
+    expect(route('/parent', null, [])).toEqual({ page: 'parent', root: null });
   });
 
   it('opens the most recent stored kid on /', () => {

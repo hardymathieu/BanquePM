@@ -1,7 +1,7 @@
 // Shape checks for documents read from the outside world (decrypted blobs, export files).
 // Unknown extra fields are allowed, so a newer v1 writer stays readable by older apps.
 import { isIsoDate } from './dates';
-import type { AllowanceEntry, IsoDate, KidMove, KidPublicDoc, Ledger, RateEntry } from './types';
+import type { AllowanceEntry, FamilyDoc, IsoDate, KidMove, KidPublicDoc, Ledger, RateEntry } from './types';
 
 type Obj = Record<string, unknown>;
 
@@ -40,4 +40,19 @@ export function isLedger(v: unknown, isMove: (m: unknown) => boolean = isKidMove
 export function parseKidPublicDoc(v: unknown): KidPublicDoc | null {
   if (!isObj(v) || v.format !== 'bpm-kid' || v.v !== 1 || !isIsoDate(v.publishedOn) || !isLedger(v.kid)) return null;
   return v as KidPublicDoc;
+}
+
+const isMove = (v: unknown): boolean => isKidMove(v) && typeof (v as Obj).privateNote === 'string';
+const isSlot = (v: unknown): v is number => Number.isSafeInteger(v) && (v as number) >= 0;
+
+export function parseFamilyDoc(v: unknown): FamilyDoc | null {
+  if (!isObj(v) || v.format !== 'bpm-family' || v.v !== 1 || !isIsoDate(v.createdOn)) return null;
+  const { kids, backup, prefs, nextSlot } = v;
+  if (!Array.isArray(kids) || !kids.every((k) => isObj(k) && isSlot(k.slot) && isLedger(k.doc, isMove))) return null;
+  const slots = kids.map((k) => (k as { slot: number }).slot);
+  if (new Set(slots).size !== slots.length) return null;
+  if (nextSlot !== undefined && !(isSlot(nextSlot) && slots.every((s) => s < nextSlot))) return null;
+  if (!isObj(backup) || !isDateOrNull(backup.lastExportOn) || !isSlot(backup.changesSinceExport)) return null;
+  if (!isObj(prefs) || (prefs.locale !== 'fr' && prefs.locale !== 'en')) return null;
+  return v as FamilyDoc;
 }

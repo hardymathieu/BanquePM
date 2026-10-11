@@ -61,3 +61,35 @@ export function getCache(id: string): CachedBlob | null {
 export function setCache(id: string, entry: CachedBlob): void {
   write(cacheKey(id), entry);
 }
+
+const PARENT = 'bpm.parent';
+
+/** The parent root (base64url), when "Se souvenir sur cet appareil" is on. */
+export function getParent(): string | null {
+  const v = read(PARENT);
+  return typeof v === 'string' ? v : null;
+}
+
+export function setParent(root: string): void {
+  write(PARENT, root);
+}
+
+export function forgetParent(): void {
+  remove(PARENT);
+}
+
+/** "Oublier cet appareil": every key this app wrote, and nothing else. */
+export function forgetDevice(): void {
+  try {
+    const s = globalThis.localStorage;
+    if (!s) return;
+    const ours: string[] = [];
+    for (let i = 0; i < s.length; i++) {
+      const k = s.key(i);
+      if (k?.startsWith('bpm.')) ours.push(k);
+    }
+    for (const k of ours) s.removeItem(k);
+  } catch {
+    // nothing to forget
+  }
+}

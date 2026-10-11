@@ -63,3 +63,26 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
 - **Several remembered kids:** `/` opens the most recently opened one until the kid picker lands (milestone 9).
 - **CSP.** SVG colours come from CSS classes, and the tooltip is positioned through the CSSOM. No inline style or script, so `style-src 'self'` and `script-src 'self'` hold. They are served by `public/_headers` and checked in e2e.
 - **Bundle.** Pages that only read links don't load the BIP39 wordlists (`src/crypto/sizes.ts`, `importBoxKey` lives in `box.ts`). The kid page is 40 KB of JS (16 KB gzipped).
+
+## Parent app (milestone 5)
+
+- **`FamilyDoc.nextSlot`** (optional, additive) records the next unused kid slot. Slots are never reused, so a revoked kid link can never show another kid, even after the newest kid is moved or removed. Without it, the next slot is the highest slot + 1.
+- **Saving** (`src/family/session.ts`):
+  - The family blob is written first, with `If-Match`.
+  - Then every kid blob whose projection differs from what this session last published is written. The first save of a session therefore republishes every kid, which repairs a kid blob a crash left behind.
+  - A kid blob conflict is overwritten with the fresh projection, since the family blob was just saved and is the source of truth. A missing kid blob is recreated. A failed kid write is retried at the next save.
+  - Saves within one tab run one at a time.
+- **Conflicts.** On `409` the session reloads, re-applies the change and retries once. Every change re-validates on re-apply (overdraft, dates, 10 kids) and is rejected if it no longer fits. A second conflict shows "Modifié sur un autre appareil…" with a "Recharger" button.
+- **Revocation order:** save the family with the kid on its new slot, publish the new kid blob, then delete the old one. If the delete fails, the parent is told the old link still works.
+- **"Voir comme Léa"** opens `/apercu#k=…`: the kid view, without storing the kid or its cache on the parent's device.
+- **Parent root.** It is remembered on the device by default. "Oublier cet appareil" removes every `bpm.*` key and goes back to `/`.
+- **A new link in an open tab** (only the fragment changes) reloads the page so the fragment is read and wiped.
+- **Gender-neutral French.** "visible dans son livret" replaces "elle la verra", and "si Léa l'a gardée" replaces the spec's "…l'a-t-elle gardée ?". The verb agrees with *la pièce*, not the child.
+- **Dated changes default to the next scheduled day.** The rate and allowance forms start there, never in the past.
+- **The 10-kid limit** hides "+ Ajouter un enfant" and is also checked inside the save.
+- **Contrast.** White on the dark-mode blue (#6E9BEF) or pink (#D07BB0) is under 3:1. The `--on-mine` / `--on-out` tokens use dark ink there (about 6:1). The pressed "Gardée" uses `--ink-2` (6.5:1 light, 9.5:1 dark).
+- **Bundles.** The parent app is lazy-loaded, so kid phones never download it. The BIP39 wordlists live in `src/crypto/words.ts` and are only loaded by screens that show or read words.
+- **Deferred:**
+  - The backup banner, export, import and deleting a kid or the family are in milestone 7 (deletion offers an export first).
+  - The recovery card is in milestone 6.
+  - The sharing card is titled "Lien de Léa" until backups join it.
