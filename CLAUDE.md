@@ -35,12 +35,13 @@ You are building a zero-knowledge, open-source kids' savings app.
 ## Commands
 
 ```
-npm test             # vitest: engine, crypto, worker
-npm run typecheck    # tsc for the app, plus the engine's no-DOM config
-npm run dev          # vite + wrangler dev                      (milestone 3+)
+npm test             # vitest: "unit" project (Node) + "worker" project (workerd + local D1)
+npm run typecheck    # tsc for the app, the engine's no-DOM config and the Worker
+npm run dev          # vite build + local D1 migrations + wrangler dev (needs .dev.vars, see .dev.vars.example)
+npm run build        # vite build into dist/
+npm run deploy       # vite build + d1 migrations apply DB --remote + wrangler deploy
+npm run types        # regenerate worker-configuration.d.ts after changing wrangler.jsonc
 npm run e2e          # playwright, phone viewport, light + dark (milestone 10)
-npm run build        # vite build into dist/                     (milestone 4+)
-npm run deploy       # d1 migrations apply (by binding) + wrangler deploy
 python3 fixtures/engine_reference.py   # prints the reference test vectors
 ```
 

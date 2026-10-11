@@ -15,5 +15,5 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["src", "fixtures/*.json", "vitest.config.ts"]
+  "include": ["src", "fixtures/*.json"]
 }
