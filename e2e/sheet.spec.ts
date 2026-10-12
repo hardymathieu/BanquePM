@@ -87,7 +87,7 @@ test('explains a row it cannot read, and a ledger that goes below zero', async (
   await page.getByRole('button', { name: 'Créer ma banque' }).click();
   await page.getByLabel('Prénom').fill('Léa');
   await pickCsv(page, bad);
-  await expect(page.getByText("Ligne 3 : la date « 31/02/2025 » n'est pas lisible (jj/mm/aaaa).")).toBeVisible();
+  await expect(page.getByText("Ligne 3 : la date « 31/02/2025 » n'est pas lisible.")).toBeVisible();
   await page.locator('.sheet-import input[type=file]').setInputFiles(negative);
   await expect(page.getByText(/Le solde passe sous zéro le 6 janvier 2025/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Créer la banque de Léa' })).toBeDisabled();

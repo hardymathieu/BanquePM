@@ -183,7 +183,7 @@ export const fr = {
     amountColumn: 'Montants',
     commentColumn: 'Commentaires',
     noColumn: 'Aucune',
-    badDate: (row: number, text: string) => `Ligne ${row} : la date « ${text} » n'est pas lisible (jj/mm/aaaa).`,
+    badDate: (row: number, text: string) => `Ligne ${row} : la date « ${text} » n'est pas lisible.`,
     badAmount: (row: number, text: string) => `Ligne ${row} : le montant « ${text} » n'est pas lisible.`,
     futureDate: (row: number, date: string) => `Ligne ${row} : la date du ${date} est dans le futur.`,
     overdraft: (date: string, amount: string) =>

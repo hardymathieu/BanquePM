@@ -172,7 +172,7 @@ export const en: Messages = {
     amountColumn: 'Amounts',
     commentColumn: 'Comments',
     noColumn: 'None',
-    badDate: (row, text) => `Row ${row}: the date “${text}” can’t be read (dd/mm/yyyy).`,
+    badDate: (row, text) => `Row ${row}: the date “${text}” can’t be read.`,
     badAmount: (row, text) => `Row ${row}: the amount “${text}” can’t be read.`,
     futureDate: (row, date) => `Row ${row}: ${date} is in the future.`,
     overdraft: (date, amount) => `The balance goes below zero on ${date} (only ${amount} was there). Fix the spreadsheet, then try again.`,

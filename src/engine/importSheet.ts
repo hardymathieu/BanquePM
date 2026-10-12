@@ -122,13 +122,18 @@ function parseDate(text: string, order: Order): IsoDate | null {
     if (c.length !== 2 && c.length !== 4) return null;
     return order === 'mdy' ? iso(fullYear(c), Number(a), Number(b)) : iso(fullYear(c), Number(b), Number(a));
   }
-  const tokens = t.split(/[\s.,/-]+/).filter((x) => x && !WEEKDAYS.has(x));
-  const monthAt = tokens.findIndex((x) => MONTHS[x] !== undefined);
+  const tokens = t.split(/[\s.,/-]+/).filter(Boolean);
   const numbers = tokens.filter((x) => /^\d{1,4}$/.test(x));
-  if (monthAt < 0 || numbers.length !== 2 || tokens.length !== 3) return null;
+  const words = tokens.filter((x) => !/^\d+$/.test(x));
+  // "mar" is both mars and mardi: prefer a word that can only be a month, else take the ambiguous one.
+  const candidates = words.filter((x) => MONTHS[x] !== undefined);
+  const month = candidates.find((x) => !WEEKDAYS.has(x)) ?? candidates.at(-1);
+  const rest = [...words];
+  if (month !== undefined) rest.splice(rest.indexOf(month), 1);
+  if (month === undefined || numbers.length !== 2 || !rest.every((x) => WEEKDAYS.has(x))) return null;
   const year = numbers.find((x) => x.length === 4) ?? numbers[1]!;
   const day = numbers.find((x) => x !== year) ?? numbers[0]!;
-  return iso(fullYear(year), MONTHS[tokens[monthAt]!]!, Number(day));
+  return iso(fullYear(year), MONTHS[month]!, Number(day));
 }
 
 /** Worth reading as a date (a typo in it is an error); anything else (titles, totals) is skipped. */

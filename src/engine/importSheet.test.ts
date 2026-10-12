@@ -264,3 +264,23 @@ describe('sheet columns', () => {
     expect(sheetRows(table, { header: 0, date: 1, amount: 0, comment: -1 }, TODAY)).toEqual({ ok: false, error: 'no_rows', sample: '1,00' });
   });
 });
+
+describe('dd/Mon/yyyy dates (Google Sheets "01/Mar/2025")', () => {
+  const read = (text: string) => {
+    const res = parseSheetCsv(`Date,Ajouté / Sorti\n"${text}","1,00"`, TODAY);
+    return res.ok ? res.rows[0]!.date : res;
+  };
+
+  it.each([
+    ['05/Jan/2025', '2025-01-05'], ['01/Feb/2025', '2025-02-01'], ['01/Mar/2025', '2025-03-01'],
+    ['01/Apr/2025', '2025-04-01'], ['01/May/2025', '2025-05-01'], ['01/Jun/2025', '2025-06-01'],
+    ['01/Jul/2025', '2025-07-01'], ['01/Aug/2025', '2025-08-01'], ['01/Sep/2025', '2025-09-01'],
+    ['01/Oct/2025', '2025-10-01'], ['01/Nov/2025', '2025-11-01'], ['01/Dec/2025', '2025-12-01'],
+  ])('reads %j', (text, iso) => expect(read(text)).toBe(iso));
+
+  it('tells "mar" the month from "mar." the weekday (mardi)', () => {
+    expect(read('4 mar 2025')).toBe('2025-03-04');
+    expect(read('mar. 4 mars 2025')).toBe('2025-03-04');
+    expect(read('mar. 4 févr. 2025')).toBe('2025-02-04');
+  });
+});
