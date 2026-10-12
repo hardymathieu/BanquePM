@@ -162,8 +162,20 @@ describe('parseSheetCsv (SPEC §12)', () => {
     });
   });
 
-  it('refuses a date in the future', () => {
-    expect(parseSheetCsv('Date,Ajouté / Sorti\n01/01/2030,"1,00"', TODAY)).toEqual({ ok: false, error: 'future_date', row: 2, text: '2030-01-01' });
+  it('ignores planned rows dated after today, and counts them', () => {
+    const res = parseSheetCsv('Date,Ajouté / Sorti\n05/01/2025,"1,00"\n01/01/2030,"2,00"\n01/02/2030,\n' + TODAY.split('-').reverse().join('/') + ',"3,00"', TODAY);
+    expect(res).toEqual({
+      ok: true,
+      rows: [
+        { date: '2025-01-05', amount: 1, comment: '' },
+        { date: TODAY, amount: 3, comment: '' },
+      ],
+      future: 2,
+    });
+  });
+
+  it('refuses a sheet whose rows are all in the future', () => {
+    expect(parseSheetCsv('Date,Ajouté / Sorti\n01/01/2030,"1,00"', TODAY)).toMatchObject({ ok: false, error: 'no_rows' });
   });
 
   it('skips rows without a date, such as totals', () => {

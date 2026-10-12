@@ -60,7 +60,10 @@ export function importRows(rows: readonly SheetRow[], opts: ImportOptions): KidD
 
 export type SheetError =
   | { ok: false; error: 'no_rows'; sample?: string }
-  | { ok: false; error: 'bad_date' | 'bad_amount' | 'future_date'; row: number; text: string };
+  | { ok: false; error: 'bad_date' | 'bad_amount'; row: number; text: string };
+
+/** `future`: rows dated after today (a sheet planned ahead), left out of the import. */
+export type SheetRead = { ok: true; rows: SheetRow[]; future: number } | SheetError;
 
 export type SheetColumns = {
   /** The header row (0-based), or -1 when there is none. */
@@ -222,28 +225,32 @@ export function columnLabels(table: string[][], header: number): string[] {
 }
 
 /** Dated rows from chosen columns (row numbers in errors are 1-based file lines). */
-export function sheetRows(table: string[][], cols: SheetColumns, today: IsoDate): { ok: true; rows: SheetRow[] } | SheetError {
+export function sheetRows(table: string[][], cols: SheetColumns, today: IsoDate): SheetRead {
   const body = table.slice(cols.header + 1);
   const order = columnOrder(body.map((row) => row[cols.date] ?? ''));
   const rows: SheetRow[] = [];
+  let future = 0;
   for (let r = cols.header + 1; r < table.length; r++) {
     const dateText = cell(table, r, cols.date);
     const amountText = cell(table, r, cols.amount);
     if (!looksLikeDate(dateText)) continue; // titles, totals, blank lines
     const date = parseDate(dateText, order);
     if (!date) return { ok: false, error: 'bad_date', row: r + 1, text: dateText };
-    if (date > today) return { ok: false, error: 'future_date', row: r + 1, text: date };
+    if (date > today) {
+      future++; // planned ahead in the sheet: not history yet
+      continue;
+    }
     const amount = amountText === '' ? null : parseAmount(amountText);
     if (amountText !== '' && amount === null) return { ok: false, error: 'bad_amount', row: r + 1, text: amountText };
     rows.push({ date, amount, comment: cols.comment >= 0 ? cell(table, r, cols.comment) : '' });
   }
-  if (rows.length) return { ok: true, rows };
+  if (rows.length) return { ok: true, rows, future };
   const sample = body.map((row) => (row[cols.date] ?? '').trim()).find(Boolean);
-  return sample === undefined ? { ok: false, error: 'no_rows' } : { ok: false, error: 'no_rows', sample };
+  return sample === undefined || future > 0 ? { ok: false, error: 'no_rows' } : { ok: false, error: 'no_rows', sample };
 }
 
 /** The exported sheet → dated rows, with the columns guessed. */
-export function parseSheetCsv(text: string, today: IsoDate): { ok: true; rows: SheetRow[] } | SheetError {
+export function parseSheetCsv(text: string, today: IsoDate): SheetRead {
   const table = readSheetTable(text);
   return sheetRows(table, guessColumns(table), today);
 }

@@ -102,6 +102,7 @@ test('reads a sheet with other headers and dates in words, and lets the parent f
       '1,"dim. 5 janv. 2025","95,87 €","95,87 €",premier dépôt',
       '2,"dim. 12 janv. 2025","2,00 €","97,87 €",',
       '3,"mer. 15 janv. 2025","-7,50 €","90,37 €",glaces',
+      '4,"dim. 5 janv. 2031","2,00 €","92,37 €",prévu',
     ].join('\n'),
   );
   await page.goto('/admin');
@@ -114,6 +115,7 @@ test('reads a sheet with other headers and dates in words, and lets the parent f
   await expect(columns.getByLabel('Montants')).toHaveValue('2');
   await expect(columns.getByLabel('Commentaires')).toHaveValue('4');
   await expect(page.locator('.sheet-import .preview')).toContainText('3 lignes : 1 dimanche à la banque, 2 mouvements');
+  await expect(page.locator('.sheet-import .preview')).toContainText("1 ligne datée après aujourd'hui est laissée de côté : seul le passé est importé.");
 
   // A wrong choice explains itself; putting it back fixes it.
   await columns.getByLabel('Dates').selectOption({ label: 'Semaine' });

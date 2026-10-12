@@ -185,7 +185,8 @@ export const fr = {
     noColumn: 'Aucune',
     badDate: (row: number, text: string) => `Ligne ${row} : la date « ${text} » n'est pas lisible.`,
     badAmount: (row: number, text: string) => `Ligne ${row} : le montant « ${text} » n'est pas lisible.`,
-    futureDate: (row: number, date: string) => `Ligne ${row} : la date du ${date} est dans le futur.`,
+    futureIgnored: (n: number) =>
+      `${n} ${p(n, "ligne datée après aujourd'hui est laissée", "lignes datées après aujourd'hui sont laissées")} de côté : seul le passé est importé.`,
     overdraft: (date: string, amount: string) =>
       `Le solde passe sous zéro le ${date} (il n'y avait que ${amount}). Corrige le tableau, puis réessaie.`,
   },

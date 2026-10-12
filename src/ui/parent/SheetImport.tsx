@@ -43,9 +43,7 @@ export function SheetImport({ today, onReady }: Props) {
         : t.sheet.noRows
       : e.error === 'bad_date'
         ? t.sheet.badDate(e.row, e.text)
-        : e.error === 'bad_amount'
-          ? t.sheet.badAmount(e.row, e.text)
-          : t.sheet.futureDate(e.row, f.dateLong(e.text));
+        : t.sheet.badAmount(e.row, e.text);
 
   return (
     <div class="sheet-import">
@@ -118,6 +116,7 @@ export function SheetImport({ today, onReady }: Props) {
             />
           </p>
           <p>{t.sheet.start(f.dateLong(result.summary.start))}</p>
+          {read?.ok && read.future > 0 && <p>{t.sheet.futureIgnored(read.future)}</p>}
           <p>{t.sheet.commentsPrivate}</p>
           {result.summary.pending > 0 && <p>{t.sheet.pendingHint(day)}</p>}
         </div>

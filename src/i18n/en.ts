@@ -174,7 +174,7 @@ export const en: Messages = {
     noColumn: 'None',
     badDate: (row, text) => `Row ${row}: the date “${text}” can’t be read.`,
     badAmount: (row, text) => `Row ${row}: the amount “${text}” can’t be read.`,
-    futureDate: (row, date) => `Row ${row}: ${date} is in the future.`,
+    futureIgnored: (n) => `${n} ${p(n, 'row dated after today is', 'rows dated after today are')} left out: only the past is imported.`,
     overdraft: (date, amount) => `The balance goes below zero on ${date} (only ${amount} was there). Fix the spreadsheet, then try again.`,
   },
   picker: {
