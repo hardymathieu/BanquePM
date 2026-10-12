@@ -58,9 +58,6 @@ try {
   await page.getByRole('button', { name: 'Créer la banque de Léa' }).click();
   await page.locator('.recovery .words li').nth(11).waitFor();
   await shot(page, 'recovery');
-  await page.getByRole('button', { name: "J'ai noté mes mots" }).click();
-  await shot(page.locator('main'), 'word-check');
-  await page.getByRole('button', { name: 'Revoir mes mots' }).click();
   await page.getByRole('button', { name: 'Je le ferai plus tard' }).click();
   await page.getByRole('img', { name: 'QR code du lien de Léa' }).waitFor();
   await shot(page, 'ready');
