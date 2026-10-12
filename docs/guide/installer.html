@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installer ta propre banque · Banque de papa et maman</title>
+  <link rel="icon" href="img/icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="index.html"><img src="img/icon.png" alt="">Banque de papa et maman</a>
+  <nav aria-label="Guide">
+    <a href="index.html">Accueil</a>
+    <a href="invitation.html">Invitation</a>
+    <a href="installer.html" aria-current="page">Installer</a>
+    <a href="creer.html">Créer la banque</a>
+    <a href="enfants.html">Côté enfant</a>
+  </nav>
+</div></header>
+
+<main>
+<h1>Installer ta propre banque</h1>
+  <p class="lede">Tu peux héberger ta propre Banque de papa et maman, pour ta famille et des amis, sur un compte Cloudflare gratuit. Compte cinq minutes. Si quelqu'un l'héberge déjà pour toi, <a href="invitation.html">demande plutôt une invitation</a>.</p>
+
+  <h2>Ce qu'il te faut</h2>
+  <ul>
+    <li>Un compte <strong>Cloudflare</strong> (gratuit). Le plan gratuit suffit très largement : une famille fait quelques dizaines de requêtes par jour, sur 100 000 permises.</li>
+    <li>Un compte <strong>GitHub</strong> (gratuit) : le bouton y copie le code de l'app.</li>
+    <li>Un <strong>gestionnaire de mots de passe</strong>, pour ton mot de passe d'administration.</li>
+  </ul>
+
+  <h2>Les étapes</h2>
+  <div class="step no-shot">
+    <div>
+      <h3>1. Le bouton « Deploy to Cloudflare »</h3>
+      <p>Ouvre <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/hardymathieu/BanquePM">Deploy to Cloudflare</a> (le même bouton est en haut du README). Connecte ton compte Cloudflare et ton compte GitHub, puis garde le nom proposé ou choisis-en un : il fera partie de l'adresse de ta banque.</p>
+
+      <h3>2. Le mot de passe d'administration (<code>ADMIN_TOKEN</code>)</h3>
+      <p>Le formulaire te demande <code>ADMIN_TOKEN</code>. Choisis un <strong>long mot de passe aléatoire, de 32 caractères ou plus</strong>, généré par ton gestionnaire de mots de passe, et range-le dedans. Sur un ordinateur, <code>openssl rand -base64 32</code> en fabrique un.</p>
+      <p>Ce mot de passe sert seulement à créer des invitations. Il ne donne accès à <strong>aucune</strong> banque, pas même la tienne.</p>
+
+      <h3>3. Laisse Cloudflare travailler</h3>
+      <p>Cloudflare copie le code dans ton GitHub, crée la base de données, construit l'app et la publie. Ça prend une à deux minutes. À la fin, tu obtiens une adresse comme <code>https://banque-papa-maman.ton-compte.workers.dev</code>.</p>
+
+      <h3>4. Crée ta banque</h3>
+      <p>Ouvre <code>https://…workers.dev/admin</code>, colle ton <code>ADMIN_TOKEN</code>, puis touche <kbd>Créer ma banque</kbd>. Continue avec le guide <a href="creer.html">Créer la banque de ton enfant</a>.</p>
+      <p>Pour des amis : sur la même page, <kbd>Créer une invitation</kbd>, puis envoie le lien (voir <a href="invitation.html">Invitation</a>).</p>
+    </div>
+  </div>
+
+  <h2>Ce que tu vois, et ce que tu ne vois pas</h2>
+  <p>Depuis le tableau de bord Cloudflare, tu ne peux lire <strong>aucune</strong> banque, pas même la tienne : la base ne contient que des fichiers chiffrés, des identifiants tirés au hasard, des numéros de version et le mois du dernier changement. Les journaux et les statistiques sont coupés dans la configuration (<code>wrangler.jsonc</code>). Cloudflare transporte le trafic et voit donc passer les adresses IP, comme tout hébergeur. Le détail est sur la page <code>/confidentialite</code> de ta banque.</p>
+
+  <h2>Réglages facultatifs</h2>
+  <ul>
+    <li><strong>Un contact sur la page de confidentialité :</strong> dans Cloudflare, ouvre ton Worker → <em>Settings</em> → <em>Variables and Secrets</em>, et ajoute <code>INSTANCE_CONTACT</code> (par exemple une adresse e-mail).</li>
+    <li><strong>Ton propre nom de domaine :</strong> dans ton Worker → <em>Settings</em> → <em>Domains &amp; Routes</em> → ajoute un domaine géré par Cloudflare. Attention : changer d'adresse change aussi les liens. Fais-le avant de créer les banques.</li>
+    <li><strong>Mot de passe d'administration perdu :</strong> remplace la valeur d'<code>ADMIN_TOKEN</code> dans <em>Variables and Secrets</em>. Les banques ne sont pas touchées.</li>
+  </ul>
+
+  <h2>Mettre à jour</h2>
+  <p>Le bouton a créé une <strong>copie</strong> du code dans ton GitHub. Elle ne se met pas à jour toute seule. Pour récupérer les nouveautés, sur un ordinateur :</p>
+<pre tabindex="0" aria-label="Commandes de mise à jour"><code>git clone https://github.com/ton-compte/ta-copie.git
+cd ta-copie
+./scripts/update-from-upstream.sh
+git push</code></pre>
+  <p>Cloudflare reconstruit et republie tout seul après le <code>git push</code>. Une nouvelle version lit toujours les banques existantes.</p>
+  <div class="box warn">
+    <p><strong>Ne supprime jamais la ligne <code>database_id</code></strong> dans <code>wrangler.jsonc</code> de ta copie. C'est elle qui relie l'app à ta base de données ; sans elle, un déploiement pourrait créer une base vide. Le script de mise à jour la garde pour toi.</p>
+  </div>
+
+  <h2>Tout arrêter</h2>
+  <p>Supprimer le Worker et la base de données D1 dans Cloudflare efface <strong>toutes</strong> les banques de ton serveur. Préviens les familles invitées pour qu'elles téléchargent une sauvegarde avant.</p>
+
+  <nav class="next" aria-label="Suite"><a href="invitation.html">← Demander une invitation</a><a href="creer.html">Créer la banque de ton enfant →</a></nav>
+</main>
+
+<footer>Banque de papa et maman · logiciel libre (licence MIT) · <a href="https://github.com/hardymathieu/BanquePM">code source</a></footer>
+</body>
+</html>

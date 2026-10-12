@@ -167,3 +167,8 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
   - The kid blob carries it as an optional `locale` (additive v1; older blobs mean French). Changing it republishes the kid blobs (it is part of the session's republish key) and does not count as a backup change.
   - Everything else (landing, onboarding, admin, picker, privacy page, new families) is French by default: French first, English partial.
   - The recovery words follow the family language when displayed. The same 12 words exist in both lists, and restoring accepts either, so a card printed in one language stays valid after switching.
+
+## User guide (2026-10-12)
+
+- **`docs/guide/`** is a small static site in French (*tu* form, the app's own button wording): home, invitation, self-hosting, creating the bank and everything to do afterwards, and the kid's page. It is plain HTML and one CSS file with the app's tokens: no JavaScript, system fonts, no external request, light and dark mode. It opens straight from a clone, and publishing `docs/` with GitHub Pages works as is. Checked: links and images resolve, axe (WCAG 2.1 AA + best practices) is clean in both themes.
+- **Screenshots** come from the real app with the fictional demo bank (`npm run doc:screenshots`, phone size, JPEG). Re-run it after UI changes. The app never displays the parent link as text, so the guide says to use the recovery card's QR code or the 12 words on another device.

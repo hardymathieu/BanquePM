@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guide · Banque de papa et maman</title>
+  <meta name="description" content="Le guide de la Banque de papa et maman : demander une invitation, installer ta banque, créer la banque de ton enfant, ce que voient les enfants.">
+  <link rel="icon" href="img/icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="index.html"><img src="img/icon.png" alt="">Banque de papa et maman</a>
+  <nav aria-label="Guide">
+    <a href="index.html" aria-current="page">Accueil</a>
+    <a href="invitation.html">Invitation</a>
+    <a href="installer.html">Installer</a>
+    <a href="creer.html">Créer la banque</a>
+    <a href="enfants.html">Côté enfant</a>
+  </nav>
+</div></header>
+
+<main>
+  <h1>Le guide</h1>
+  <p class="lede">La Banque de papa et maman est une tirelire virtuelle que tu tiens pour ton enfant. Son argent de poche peut aller « à la banque », la banque paie des intérêts généreux pour apprendre, et ton enfant regarde son argent grandir sur une page à lui.</p>
+
+  <ul class="doors">
+    <li><a href="invitation.html"><strong>1. Demander une invitation</strong>Quelqu'un que tu connais héberge déjà une banque ? Il te faut juste un code.</a></li>
+    <li><a href="installer.html"><strong>2. Installer ta propre banque</strong>Sur ton compte Cloudflare gratuit, en cinq minutes, avec le bouton « Deploy ».</a></li>
+    <li><a href="creer.html"><strong>3. Créer la banque de ton enfant</strong>Les étapes, la carte de récupération, et ce qu'il faut faire chaque semaine.</a></li>
+    <li><a href="enfants.html"><strong>4. Ce que voient les enfants</strong>Le solde, la pièce qui se remplit, le graphique, le livret.</a></li>
+  </ul>
+
+  <h2>Qui fait quoi</h2>
+  <table>
+    <tr><th scope="row">L'hébergeur</th><td>A installé l'app sur son compte Cloudflare. Il crée des invitations depuis la page <code>/admin</code>. <strong>Il ne peut lire aucune banque</strong> : il ne voit ni prénoms, ni montants, ni notes.</td></tr>
+    <tr><th scope="row">Le parent</th><td>Tient la banque : les pièces du dimanche, les dépôts, les retraits, le taux d'intérêt. Il a un <strong>lien parent</strong> secret et <strong>12 mots de récupération</strong>.</td></tr>
+    <tr><th scope="row">L'enfant</th><td>Regarde sa banque avec son propre lien, sur son téléphone ou sa tablette. <strong>Il ne peut rien modifier.</strong></td></tr>
+  </table>
+
+  <h2>La promesse</h2>
+  <ul>
+    <li><strong>Pas de compte, pas d'e-mail, pas de mot de passe.</strong> Ta banque s'ouvre avec ton lien parent et se récupère avec tes 12 mots.</li>
+    <li><strong>Tout est chiffré sur ton téléphone</strong> avant d'être envoyé. Le serveur ne garde que des fichiers qu'il ne peut pas ouvrir.</li>
+    <li><strong>Aucun journal, aucune statistique</strong>, aucune requête vers un autre site.</li>
+    <li><strong>Tes données sont à toi</strong> : une sauvegarde en un clic, qui s'ouvre même sans internet.</li>
+  </ul>
+  <div class="box warn">
+    <p><strong>Pas de récupération possible sans tes 12 mots ou une sauvegarde.</strong> C'est le prix de la confidentialité : personne, pas même l'hébergeur, ne peut retrouver ta banque pour toi. Le guide <a href="creer.html#a-ne-pas-oublier">Créer la banque</a> explique quoi ranger, et où.</p>
+  </div>
+</main>
+
+<footer>Banque de papa et maman · logiciel libre (licence MIT) · <a href="https://github.com/hardymathieu/BanquePM">code source</a></footer>
+</body>
+</html>

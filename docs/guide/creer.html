@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Créer la banque de ton enfant · Banque de papa et maman</title>
+  <link rel="icon" href="img/icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="index.html"><img src="img/icon.png" alt="">Banque de papa et maman</a>
+  <nav aria-label="Guide">
+    <a href="index.html">Accueil</a>
+    <a href="invitation.html">Invitation</a>
+    <a href="installer.html">Installer</a>
+    <a href="creer.html" aria-current="page">Créer la banque</a>
+    <a href="enfants.html">Côté enfant</a>
+  </nav>
+</div></header>
+
+<main>
+<h1>Créer la banque de ton enfant</h1>
+  <p class="lede">Tu as une invitation, ou tu as touché « Créer ma banque » sur ta page d'administration. Voici les quatre étapes, puis tout ce que tu fais ensuite, semaine après semaine.</p>
+  <p>Fais-le sur <strong>le téléphone que tu utiliseras comme parent</strong> : il se souviendra de ta banque. Prévois cinq minutes, et une imprimante si tu en as une (sinon un papier et un stylo).</p>
+
+  <h2>1. Le formulaire</h2>
+  <div class="step">
+    <div>
+      <ul>
+        <li><strong>Prénom</strong> : celui que ton enfant verra (« Bonjour Léa ! »). Un surnom marche aussi.</li>
+        <li><strong>Anniversaire</strong> (facultatif) : la page de ton enfant montre ce qu'il pourrait avoir « pour tes 10 ans ». Sans date, elle parle de « dans 6 mois ».</li>
+        <li><strong>Argent de poche</strong> et <strong>jour</strong> : par exemple 2 € chaque dimanche. Ce sont les « pièces du dimanche » que ton enfant met à la banque, ou garde.</li>
+        <li><strong>Taux d'intérêt</strong> : 12 % par an par défaut. C'est généreux exprès : assez pour qu'un enfant <em>voie</em> son argent grandir. Tu pourras le changer plus tard, à partir d'une date.</li>
+      </ul>
+    </div>
+    <figure><img src="img/create-form.jpg" alt="Le formulaire « Crée la banque de ton enfant » : code d'invitation, prénom, anniversaire, argent de poche, jour, taux." width="390" loading="lazy"><figcaption>« Nouveau livret » : on part de zéro.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Tu as déjà un tableau (Google Sheets) ?</h3>
+      <p>Choisis <kbd>Depuis un tableau</kbd> et reprends tout l'historique :</p>
+      <ol>
+        <li>Dans Google Sheets : <em>Fichier → Télécharger → Valeurs séparées par des virgules (.csv)</em>.</li>
+        <li>Touche <kbd>Choisir le fichier CSV</kbd>. Le fichier est lu sur ton téléphone : il n'est envoyé nulle part.</li>
+        <li>Vérifie <strong>« Colonnes lues »</strong> : la colonne des dates, celle des montants (les dépôts et retraits, pas le solde !), et celle des commentaires. Change-les si besoin.</li>
+        <li>Lis le résumé : nombre de lignes, de dimanches à la banque, de mouvements, de dimanches « à rattraper », et le solde d'aujourd'hui.</li>
+      </ol>
+      <p>Bon à savoir : les dates écrites <code>05/01/2025</code>, <code>2025-01-05</code>, <code>01/Mar/2025</code> ou <code>5 janv. 2025</code> sont comprises. Les lignes datées après aujourd'hui (un tableau prévu à l'avance) sont laissées de côté. Les commentaires deviennent des <strong>notes privées</strong>, que ton enfant ne voit pas.</p>
+    </div>
+    <figure><img src="img/sheet-import.jpg" alt="L'import d'un tableau : colonnes lues, argent de poche, taux, et le résumé « 77 lignes : 71 dimanches à la banque… »." width="390" loading="lazy"><figcaption>Le résumé avant de créer la banque.</figcaption></figure>
+  </div>
+
+  <h2>2. La carte de récupération</h2>
+  <div class="step">
+    <div>
+      <p>Juste après la création, l'app te montre <strong>12 mots</strong>. Ce sont <strong>la seule clé de ta banque</strong> : si tu perds ton téléphone et ces mots, personne ne peut récupérer la banque, pas même l'hébergeur.</p>
+      <ul>
+        <li>Touche <kbd>Imprimer la carte</kbd> : une page avec les 12 mots numérotés, un QR code qui ouvre ton espace parent, et la date. Pas de prénom dessus.</li>
+        <li>Pas d'imprimante ? Recopie les 12 mots <strong>dans l'ordre</strong>, sur papier.</li>
+        <li><strong>Range la carte avec la tirelire</strong>, ou avec tes papiers importants. Pas en photo sur ton téléphone.</li>
+      </ul>
+      <p>Ensuite, <kbd>J'ai noté mes mots</kbd> : l'app te demande 3 mots au hasard pour vérifier. <kbd>Je le ferai plus tard</kbd> existe, mais l'app te le rappellera chaque mois.</p>
+    </div>
+    <figure><img src="img/recovery.jpg" alt="La carte de récupération à l'écran : 12 mots numérotés, « Imprimer la carte », « J'ai noté mes mots », « Je le ferai plus tard »." width="390" loading="lazy"><figcaption>Les 12 mots (ceux d'une banque de démonstration).</figcaption></figure>
+  </div>
+
+  <h2>3. Le lien de ton enfant</h2>
+  <div class="step">
+    <div>
+      <p>L'app affiche le lien et le QR code de ton enfant. <strong>Ce lien permet seulement de regarder</strong> : avec lui, on ne peut rien modifier.</p>
+      <ol>
+        <li>Scanne le QR code avec le téléphone (ou la tablette) de ton enfant, ou envoie-lui le lien.</li>
+        <li>Ajoute la page à l'écran d'accueil, comme une app :
+          <ul>
+            <li><strong>iPhone, iPad</strong> (Safari) : bouton Partager → <em>Sur l'écran d'accueil</em>.</li>
+            <li><strong>Android</strong> (Chrome) : menu <kbd>⋮</kbd> → <em>Ajouter à l'écran d'accueil</em> ou <em>Installer l'application</em>.</li>
+          </ul>
+        </li>
+      </ol>
+      <p>Plusieurs enfants sur un même appareil ? Ouvre chaque lien une fois : l'app demandera « Qui regarde sa banque ? ».</p>
+    </div>
+    <figure><img src="img/ready.jpg" alt="« La banque de Léa est prête » : le QR code du lien de Léa, le bouton « Copier le lien de Léa », et « Ouvrir mon espace parent »." width="390" loading="lazy"><figcaption>La fin de la création.</figcaption></figure>
+  </div>
+
+  <h2>4. Ton espace parent</h2>
+  <p>Touche <kbd>Ouvrir mon espace parent</kbd>. <strong>Ce téléphone se souvient de ta banque</strong> : pour y revenir, ouvre l'adresse de ta banque suivie de <code>/parent</code> (ajoute-la à tes favoris). Ton lien parent n'est jamais affiché en clair : sur un autre appareil, <strong>scanne le QR code de ta carte de récupération</strong>, ou choisis <kbd>Restaurer avec mes 12 mots</kbd> sur la page d'accueil.</p>
+
+  <h2>Ensuite, chaque semaine</h2>
+  <div class="step">
+    <div>
+      <h3>Les dimanches à rattraper</h3>
+      <p>Chaque jour d'argent de poche arrive dans <strong>« Dimanches à rattraper »</strong>. Pour chacun, touche <kbd>Banque</kbd> (la pièce est allée à la banque) ou <kbd>Gardée</kbd> (ton enfant l'a gardée). Tu as oublié quelques semaines ? Ce n'est pas grave : rattrape-les quand tu veux, ou toutes d'un coup avec <kbd>Tout à la banque</kbd> ou <kbd>Tout gardé</kbd>. Les intérêts sont recalculés depuis la bonne date.</p>
+      <p>Les pièces gardées ne sont pas un reproche : elles servent seulement à la courbe « Et si tu avais mis chaque pièce ? » de ton enfant.</p>
+    </div>
+    <figure><img src="img/catch-up.jpg" alt="« Dimanches à rattraper » : quatre dimanches avec Banque / Gardée, et l'aperçu « +8,00 € de pièces et +0,03 € d'intérêts rattrapés »." width="390" loading="lazy"><figcaption>L'aperçu montre le nouveau solde avant d'enregistrer.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Dépôts et retraits</h3>
+      <p>Un cadeau de Mamie, des sous trouvés, un achat : <strong>« Ajouter un mouvement »</strong>.</p>
+      <ul>
+        <li><strong>Date</strong> : aujourd'hui par défaut. Tu peux dater dans le passé : l'app recalcule les intérêts et te dit combien ça change.</li>
+        <li><strong>Note pour ton enfant</strong> : il la verra dans son livret, écrite à la main.</li>
+        <li><strong>Note privée</strong> : seulement pour toi. Elle n'arrive jamais sur la page de ton enfant.</li>
+        <li>Un retrait ne peut jamais rendre le compte négatif, même daté dans le passé.</li>
+      </ul>
+      <p>Pour corriger, touche une ligne du <strong>Livret</strong> : tu peux la modifier ou la supprimer. Un dimanche peut passer de « banque » à « gardée », ou revenir « à rattraper ».</p>
+    </div>
+    <figure><img src="img/add-move.jpg" alt="« Ajouter un mouvement » : Dépôt / Retrait, montant, date, note pour Léa, note privée, et « Nouveau solde »." width="390" loading="lazy"><figcaption>Le bouton dit exactement ce qui va se passer.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Réglages</h3>
+      <ul>
+        <li><strong>Langue</strong> : français ou anglais, pour ton espace et pour les pages de tes enfants (pas besoin de toucher à leur téléphone).</li>
+        <li><strong>Prénom, anniversaire</strong>.</li>
+        <li><strong>Argent de poche</strong> et <strong>taux d'intérêt</strong> : ils changent <em>à partir d'une date</em>. Le passé ne change jamais.</li>
+        <li><strong>Oublier cet appareil</strong> : sur un téléphone prêté ou partagé.</li>
+        <li><strong>Supprimer</strong> la banque d'un enfant, ou toute ta banque (une sauvegarde t'est proposée avant).</li>
+      </ul>
+      <p>Un autre enfant ? <kbd>+ Ajouter un enfant</kbd>, en haut : chacun a son propre lien.</p>
+    </div>
+    <figure><img src="img/settings.jpg" alt="Les réglages : langue, prénom, anniversaire, argent de poche, taux d'intérêt, oublier cet appareil, supprimer." width="390" loading="lazy"><figcaption>« Réglages », en bas de l'espace parent.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Le lien et la sauvegarde</h3>
+      <ul>
+        <li>Le QR code et le lien de ton enfant, pour un nouvel appareil.</li>
+        <li><kbd>Créer un nouveau lien</kbd> si un téléphone est perdu ou si le lien a été partagé par erreur : l'ancien ne marche plus.</li>
+        <li>Tes 12 mots, pour les revoir, les imprimer, les vérifier.</li>
+        <li><kbd>Télécharger</kbd> une sauvegarde, ou <kbd>Restaurer</kbd> une sauvegarde.</li>
+      </ul>
+    </div>
+    <figure><img src="img/sharing.jpg" alt="« Lien de Léa et sauvegarde » : QR code, copier le lien, créer un nouveau lien, carte de récupération, télécharger, restaurer." width="390" loading="lazy"><figcaption>« Lien de Léa et sauvegarde ».</figcaption></figure>
+  </div>
+
+  <h2>Les sauvegardes</h2>
+  <p>Une bannière te le rappelle tant qu'il n'y a pas de sauvegarde, après 30 jours, ou après 5 changements. <kbd>Télécharger la sauvegarde</kbd> crée un fichier <code>banque-lea-2026-10-12.json</code>.</p>
+  <ul>
+    <li><strong>Range-le hors de ton téléphone</strong> : ton cloud, une clé USB, un e-mail à toi-même. Si ton téléphone le permet (souvent sur Android), <kbd>Partager la sauvegarde</kbd> l'envoie directement.</li>
+    <li>Le fichier contient tout, <strong>notes privées comprises</strong>, et n'est pas chiffré : traite-le comme un document personnel.</li>
+    <li>Il s'ouvre même sans internet : sur la page d'accueil, <kbd>Ouvrir une sauvegarde</kbd>. On peut aussi en recréer une banque complète, avec une invitation.</li>
+  </ul>
+
+  <h2>Nouveau téléphone, téléphone perdu</h2>
+  <table>
+    <tr><th scope="row">Ton nouveau téléphone</th><td>Scanne le QR code de ta carte de récupération, ou <kbd>Restaurer avec mes 12 mots</kbd> sur la page d'accueil. Tout est là.</td></tr>
+    <tr><th scope="row">Ton téléphone perdu</th><td>Même chose sur un autre appareil. Ta banque n'est lisible par personne sans ton lien ou tes mots.</td></tr>
+    <tr><th scope="row">Le téléphone de ton enfant perdu</th><td>Dans ton espace : <kbd>Créer un nouveau lien</kbd>, puis ouvre le nouveau lien sur le nouvel appareil.</td></tr>
+    <tr><th scope="row">Mots et lien perdus</th><td>Seule une sauvegarde peut sauver l'historique : <kbd>Ouvrir une sauvegarde</kbd>, puis <kbd>Créer une banque à partir de cette sauvegarde</kbd> (il faut une invitation).</td></tr>
+  </table>
+
+  <div class="box" id="a-ne-pas-oublier">
+    <h3>À ne pas oublier</h3>
+    <ul class="checklist">
+      <li>Mes 12 mots sont sur papier, rangés avec la tirelire ou mes papiers importants.</li>
+      <li>J'ai vérifié mes mots (3 mots demandés par l'app).</li>
+      <li>J'ai téléchargé une sauvegarde et je l'ai rangée hors de mon téléphone.</li>
+      <li>Le lien de mon enfant est sur son écran d'accueil.</li>
+      <li>L'adresse de mon espace parent (…<code>/parent</code>) est dans mes favoris.</li>
+    </ul>
+  </div>
+
+  <nav class="next" aria-label="Suite"><a href="installer.html">← Installer ta propre banque</a><a href="enfants.html">Ce que voient les enfants →</a></nav>
+</main>
+
+<footer>Banque de papa et maman · logiciel libre (licence MIT) · <a href="https://github.com/hardymathieu/BanquePM">code source</a></footer>
+</body>
+</html>

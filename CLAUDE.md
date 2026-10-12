@@ -47,6 +47,7 @@ npm run e2e          # playwright against a production build in wrangler dev, 39
 npm run check:dist   # build + no foreign URLs, CSP present, service worker sane, size budgets
 npm run lighthouse   # Lighthouse scores for the kid view and parent home (demo bank)
 npm run verify       # typecheck + unit + check:dist + e2e: run before saying anything is done
+npm run doc:screenshots  # re-take docs/guide/img/*.jpg from the demo bank after a UI change
 python3 fixtures/engine_reference.py   # prints the reference test vectors
 ```
 
@@ -54,6 +55,7 @@ python3 fixtures/engine_reference.py   # prints the reference test vectors
 
 - `npm run verify` passes (typecheck, unit, dist check, e2e). Every e2e test already fails on a foreign request or a console error (`e2e/fixtures.ts`).
 - New screens get an axe check in `e2e/a11y.spec.ts`.
+- If the UI or its wording changed, update the user guide (`docs/guide/*.html`, French, plain HTML, no JS) and run `npm run doc:screenshots`.
 - You opened the screen at 390×844 in light and dark (screenshot) and compared it with the prototype. The e2e tests save screenshots under `test-results/`; render the prototype the same way into the scratchpad, never into the repo.
 - `grep -R "console\." worker/` is empty (also a test).
 
