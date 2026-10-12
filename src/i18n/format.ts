@@ -27,11 +27,14 @@ export function formatter(locale: Locale) {
     money: (n: number) => money.format(n),
     moneyWhole: (n: number) => moneyWhole.format(n),
     signedMoney: (n: number) => `${n < 0 ? '−' : '+'}${money.format(Math.abs(n))}`,
-    /** "289" and "05" for the big balance: euros with group separators, cents always two digits. */
-    balanceParts(n: number): { euros: string; cents: string } {
+    /** The big balance in pieces, in the locale's order: fr "289" "," "05" then €, en € then "289" "." "05". */
+    balanceParts(n: number): { euros: string; cents: string; decimal: string; symbolFirst: boolean } {
       const totalCents = Math.round(Math.abs(n) * 100);
       const euros = integer.format(Math.floor(totalCents / 100));
-      return { euros: n < -0.004 ? `−${euros}` : euros, cents: String(totalCents % 100).padStart(2, '0') };
+      const parts = money.formatToParts(1.5);
+      const decimal = parts.find((p) => p.type === 'decimal')?.value ?? ',';
+      const symbolFirst = parts.findIndex((p) => p.type === 'currency') < parts.findIndex((p) => p.type === 'integer');
+      return { euros: n < -0.004 ? `−${euros}` : euros, cents: String(totalCents % 100).padStart(2, '0'), decimal, symbolFirst };
     },
     percent: (rate: number) => percent.format(rate),
     dateLong: date({ day: 'numeric', month: 'long', year: 'numeric' }),

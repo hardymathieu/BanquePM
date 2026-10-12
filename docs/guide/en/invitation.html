@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ask for an invitation · Mum and dad’s bank</title>
+  <link rel="alternate" hreflang="fr" href="../invitation.html">
+  <link rel="alternate" hreflang="en" href="invitation.html">
+  <link rel="icon" href="../img/icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="index.html"><img src="../img/icon.png" alt="">Mum and dad’s bank</a>
+  <nav aria-label="Guide">
+    <a href="index.html">Home</a>
+    <a href="invitation.html" aria-current="page">Invitation</a>
+    <a href="install.html">Install</a>
+    <a href="create.html">Create the bank</a>
+    <a href="kids.html">Kids' side</a>
+    <a class="lang" href="../invitation.html" hreflang="fr" lang="fr">Français</a>
+  </nav>
+</div></header>
+
+<main>
+<h1>Ask for an invitation</h1>
+  <p class="lede">If someone you know already hosts a <span lang="fr">Banque de papa et maman</span>, there is nothing to install: you only need an invitation code. Otherwise, <a href="install.html">install your own bank</a>.</p>
+
+  <h2>What you ask for, and what you don’t give</h2>
+  <p>Just ask the host for “an invitation to the <span lang="fr">Banque de papa et maman</span>”. They need nothing else: <strong>not your child’s name, not their age, not your e-mail</strong>. Even afterwards they can never read your bank, which is encrypted on your phone.</p>
+
+  <div class="step">
+    <div>
+      <h3>What you receive</h3>
+      <p>A <strong>link</strong> that looks like <code>https://…/#i=ABCDE-23456</code>, or just the <strong>code</strong> <code>ABCDE-23456</code>, sometimes as a QR code.</p>
+      <ul>
+        <li>An invitation works <strong>only once</strong>.</li>
+        <li>It is valid for <strong>7, 14 or 30 days</strong> (the host chooses).</li>
+        <li>Capitals and the dash don’t matter: <code>abcde23456</code> works too.</li>
+      </ul>
+    </div>
+    <figure><img src="../img/admin-invite.jpg" alt="The host’s screen: an invitation code, its end date, a QR code and two buttons to copy the link or the code." width="390" loading="lazy"><figcaption>What the host sees when creating your invitation (in French).</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Using the invitation</h3>
+      <ol>
+        <li><strong>With the link:</strong> open it on <em>your</em> phone. The page <span lang="fr">« Crée la banque de ton enfant »</span> (create your child’s bank) opens with the code already filled in.</li>
+        <li><strong>With the code only:</strong> open the bank’s address, tap <kbd lang="fr">J'ai une invitation</kbd> (I have an invitation), then type the code.</li>
+      </ol>
+      <p>Then follow <a href="create.html">Create your child’s bank</a>.</p>
+    </div>
+    <figure><img src="../img/landing.jpg" alt="The welcome page: « J'ai une invitation », « Restaurer avec mes 12 mots », « Ouvrir une sauvegarde »." width="390" loading="lazy"><figcaption>A bank’s welcome page (always in French).</figcaption></figure>
+  </div>
+
+  <h2>If it doesn’t work</h2>
+  <table>
+    <tr><th scope="row"><span lang="fr">« Cette invitation n'est plus valable. Demande-en une nouvelle. »</span></th><td>“This invitation no longer works.” The code was already used, or it expired. Ask the host for a new one.</td></tr>
+    <tr><th scope="row"><span lang="fr">« Un code a 10 caractères… »</span></th><td>“A code has 10 characters.” One is missing or there is one too many. Codes never contain the letters I and O or the digits 0 and 1: it is probably a misread 1 or 0.</td></tr>
+  </table>
+
+  <h2>If you are the host</h2>
+  <ol>
+    <li>Open <code>https://your-bank…/admin</code>.</li>
+    <li>Paste your admin password (<code>ADMIN_TOKEN</code>). It stays in the page and is stored nowhere.</li>
+    <li>Choose how long it is valid, tap <kbd lang="fr">Créer une invitation</kbd> (create an invitation), then send the link, the code or the QR code.</li>
+  </ol>
+  <p>The admin page cannot read any bank. It only creates invitations, and creates your own bank with <kbd lang="fr">Créer ma banque</kbd> (create my bank).</p>
+
+  <nav class="next" aria-label="Next"><a href="index.html">← Home</a><a href="install.html">Install your own bank →</a></nav>
+</main>
+
+<footer>Banque de papa et maman (Mum and dad’s bank) · free software (MIT licence) · <a href="https://github.com/hardymathieu/BanquePM">source code</a></footer>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The guide · Mum and dad’s bank</title>
+  <meta name="description" content="The guide to Mum and dad’s bank: ask for an invitation, install your own, create your child’s bank, what children see.">
+  <link rel="alternate" hreflang="fr" href="../index.html">
+  <link rel="alternate" hreflang="en" href="index.html">
+  <link rel="icon" href="../img/icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="index.html"><img src="../img/icon.png" alt="">Mum and dad’s bank</a>
+  <nav aria-label="Guide">
+    <a href="index.html" aria-current="page">Home</a>
+    <a href="invitation.html">Invitation</a>
+    <a href="install.html">Install</a>
+    <a href="create.html">Create the bank</a>
+    <a href="kids.html">Kids' side</a>
+    <a class="lang" href="../index.html" hreflang="fr" lang="fr">Français</a>
+  </nav>
+</div></header>
+
+<main>
+<h1>The guide</h1>
+  <p class="lede">Mum and dad’s bank (<span lang="fr">Banque de papa et maman</span>) is a virtual piggy bank you run for your child. Pocket money can go “to the bank”, the bank pays generous interest to learn from, and your child watches the money grow on a page of their own.</p>
+
+  <div class="box">
+    <p><strong>About languages.</strong> The app is French first. The screens you see before your bank exists (welcome page, invitation, creating the bank, recovery card) are always in French; this guide gives each French button with its translation. Once your bank exists, switch it to English in <strong><span lang="fr">Réglages</span> → <span lang="fr">Langue</span> → English</strong>: your parent space <em>and</em> your children’s pages change, whatever their phones are set to.</p>
+  </div>
+
+  <ul class="doors">
+    <li><a href="invitation.html"><strong>1. Ask for an invitation</strong>Someone you know already hosts a bank? You just need a code.</a></li>
+    <li><a href="install.html"><strong>2. Install your own bank</strong>On your free Cloudflare account, in five minutes, with the “Deploy” button.</a></li>
+    <li><a href="create.html"><strong>3. Create your child’s bank</strong>The steps, the recovery card, and what to do every week.</a></li>
+    <li><a href="kids.html"><strong>4. What children see</strong>The balance, the filling coin, the chart, the passbook.</a></li>
+  </ul>
+
+  <h2>Who does what</h2>
+  <table>
+    <tr><th scope="row">The host</th><td>Installed the app on their Cloudflare account and creates invitations from the <code>/admin</code> page. <strong>They cannot read any bank</strong>: no names, no amounts, no notes.</td></tr>
+    <tr><th scope="row">The parent</th><td>Runs the bank: Sunday coins, deposits, withdrawals, the interest rate. Has a secret <strong>parent link</strong> and <strong>12 recovery words</strong>.</td></tr>
+    <tr><th scope="row">The child</th><td>Looks at their bank with their own link, on their phone or tablet. <strong>They cannot change anything.</strong></td></tr>
+  </table>
+
+  <h2>The promise</h2>
+  <ul>
+    <li><strong>No account, no e-mail, no password.</strong> Your bank opens with your parent link and is recovered with your 12 words.</li>
+    <li><strong>Everything is encrypted on your phone</strong> before it is sent. The server only keeps files it cannot open.</li>
+    <li><strong>No logs, no analytics</strong>, no request to any other site.</li>
+    <li><strong>Your data is yours</strong>: a backup in one tap, which opens even without internet.</li>
+  </ul>
+  <div class="box warn">
+    <p><strong>No recovery is possible without your 12 words or a backup.</strong> That is the price of privacy: nobody, not even the host, can find your bank for you. <a href="create.html#dont-forget">Create the bank</a> explains what to keep, and where.</p>
+  </div>
+
+  <nav class="next" aria-label="Next"><span></span><a href="invitation.html">Ask for an invitation →</a></nav>
+</main>
+
+<footer>Banque de papa et maman (Mum and dad’s bank) · free software (MIT licence) · <a href="https://github.com/hardymathieu/BanquePM">source code</a></footer>
+</body>
+</html>

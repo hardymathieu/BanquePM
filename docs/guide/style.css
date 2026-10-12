@@ -72,3 +72,4 @@ th { color: var(--ink-2); font-weight: 600; }
 
 .next { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--rule); }
 footer { max-width: 860px; margin: 0 auto; padding: 0 16px 40px; font-size: 14px; color: var(--ink-3); }
+header.top nav a.lang { font-weight: 700; border: 2px solid var(--mine); border-radius: 999px; padding: 2px 12px; text-decoration: none; }

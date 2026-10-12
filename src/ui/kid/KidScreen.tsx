@@ -36,9 +36,10 @@ export function KidScreen({ doc, today, staleSince, embedded = false, onSwitchKi
       {staleSince && <p class="stale">{t.kid.stale(f.dateLong(staleSince))}</p>}
       {embedded ? <p class="hello">{t.kid.hello(doc.kid.name)}</p> : <h1 class="hello">{t.kid.hello(doc.kid.name)}</h1>}
       <p class="balance" role="img" aria-label={f.money(numbers.balance)}>
+        {parts.symbolFirst && <span class="sym first" aria-hidden="true">€</span>}
         <span class="eur" aria-hidden="true">{parts.euros}</span>
-        <span class="cts" aria-hidden="true">,{parts.cents}</span>
-        <span class="sym" aria-hidden="true">€</span>
+        <span class="cts" aria-hidden="true">{parts.decimal}{parts.cents}</span>
+        {!parts.symbolFirst && <span class="sym" aria-hidden="true">€</span>}
       </p>
       <p class="where">{t.kid.where}</p>
       <p class="today">

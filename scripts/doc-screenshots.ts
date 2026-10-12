@@ -1,7 +1,7 @@
 // npm run doc:screenshots: the pictures in docs/guide/img, taken from the real app with the
-// fictional demo bank ("Léa"), at phone size. Never real data. Re-run when the UI changes.
+// fictional demo bank ("Léa"), at phone size, in French and (for the parent and kid pages) English. Never real data. Re-run when the UI changes.
 import { execSync, spawn } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { chromium, type Locator, type Page } from '@playwright/test';
 import rows from '../fixtures/sheet-a.json' with { type: 'json' };
 import { localToday } from '../src/ui/shared/today';
@@ -93,6 +93,38 @@ try {
   await dark.goto(bank.kidLink);
   await dark.locator('.chart svg').waitFor();
   await shot(dark, 'kid-dark');
+
+  // The same family in English (Settings → Language), for the English guide.
+  // Onboarding screens stay French in the app, so the English guide reuses those.
+  mkdirSync(`${OUT}/en`, { recursive: true });
+  const enBank = await createDemoBank(base, TOKEN, localToday(), 'Léa', 'en');
+  const en = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, locale: 'en-GB', colorScheme: 'light' });
+  await en.goto(enBank.parentLink);
+  await en.locator('.sum .val').waitFor();
+  await shot(en, 'en/parent-home');
+  await en.getByRole('button', { name: 'All to the bank' }).click();
+  await shot(en.locator('section').filter({ has: en.locator('#h-catch') }), 'en/catch-up');
+  await en.getByLabel('Amount (€)').first().fill('10');
+  await en.getByLabel('Note for Léa (shown in the passbook)').fill('From Grandma for your birthday');
+  await en.getByLabel('Private note (just for you)').fill('Envelope of 3 October');
+  await shot(en.locator('section').filter({ has: en.locator('#h-add') }), 'en/add-move');
+  await en.getByText('Settings', { exact: true }).click();
+  await shot(en.locator('details.fold').filter({ hasText: 'Settings' }), 'en/settings');
+  await en.getByText('Léa’s link and backup', { exact: true }).click();
+  await en.getByRole('img', { name: 'QR code of Léa’s link' }).waitFor();
+  await shot(en.locator('details.fold').filter({ hasText: 'Léa’s link and backup' }), 'en/sharing');
+  const enKid = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, locale: 'en-GB', colorScheme: 'light' });
+  await enKid.goto(enBank.kidLink);
+  await enKid.locator('.chart svg').waitFor();
+  await shot(enKid, 'en/kid-top');
+  await shot(enKid.locator('section').filter({ has: enKid.locator('#h-coin') }), 'en/kid-coin');
+  await shot(enKid.locator('section').filter({ has: enKid.locator('#h-chart') }), 'en/kid-chart');
+  await shot(enKid.locator('section').filter({ has: enKid.locator('#h-bday') }), 'en/kid-birthday');
+  await shot(enKid.locator('section').filter({ has: enKid.locator('#h-book') }), 'en/kid-passbook');
+  const enDark = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, locale: 'en-GB', colorScheme: 'dark' });
+  await enDark.goto(enBank.kidLink);
+  await enDark.locator('.chart svg').waitFor();
+  await shot(enDark, 'en/kid-dark');
 
   await browser.close();
   process.stdout.write(`screenshots written to ${OUT}\n`);

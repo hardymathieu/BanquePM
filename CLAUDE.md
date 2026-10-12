@@ -55,7 +55,7 @@ python3 fixtures/engine_reference.py   # prints the reference test vectors
 
 - `npm run verify` passes (typecheck, unit, dist check, e2e). Every e2e test already fails on a foreign request or a console error (`e2e/fixtures.ts`).
 - New screens get an axe check in `e2e/a11y.spec.ts`.
-- If the UI or its wording changed, update the user guide (`docs/guide/*.html`, French, plain HTML, no JS) and run `npm run doc:screenshots`.
+- If the UI or its wording changed, update the user guide in both languages (`docs/guide/*.html` French, `docs/guide/en/*.html` English; plain HTML, no JS) and run `npm run doc:screenshots`. Commit only the screenshots that really changed: onboarding shots differ on every run (random codes and words).
 - You opened the screen at 390×844 in light and dark (screenshot) and compared it with the prototype. The e2e tests save screenshots under `test-results/`; render the prototype the same way into the scratchpad, never into the repo.
 - `grep -R "console\." worker/` is empty (also a test).
 

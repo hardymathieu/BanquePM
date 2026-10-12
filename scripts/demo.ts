@@ -39,7 +39,7 @@ async function post(base: string, body: unknown, headers: Record<string, string>
   if (res.status !== 201) throw new Error(`POST /blobs → ${res.status} ${await res.text()}`);
 }
 
-export async function createDemoBank(base: string, adminToken: string, today: IsoDate, name = 'Léa'): Promise<DemoBank> {
+export async function createDemoBank(base: string, adminToken: string, today: IsoDate, name = 'Léa', locale: 'fr' | 'en' = 'fr'): Promise<DemoBank> {
   const root = generateRoot();
   const family = await deriveFamily(root);
   const kid = await deriveKid(root, 0);
@@ -50,12 +50,12 @@ export async function createDemoBank(base: string, adminToken: string, today: Is
     createdOn: today,
     kids: [{ slot: 0, doc }],
     backup: { lastExportOn: null, changesSinceExport: 0 },
-    prefs: { locale: 'fr' },
+    prefs: { locale },
   };
   await post(base, { id: family.id, writeHash: family.writeHash, ct: toBase64url(await seal(family.key, family.id, familyDoc)) }, { 'X-Invite': adminToken });
   await post(
     base,
-    { id: kid.id, writeHash: kid.writeHash, ct: toBase64url(await seal(kid.key, kid.id, projectForKid(doc, today, 'fr'))) },
+    { id: kid.id, writeHash: kid.writeHash, ct: toBase64url(await seal(kid.key, kid.id, projectForKid(doc, today, locale))) },
     { 'X-Parent-Id': family.id, Authorization: `Bearer ${family.writeToken}` },
   );
   return { root, doc, kidId: kid.id, kidToken: kid.writeToken, kidLink: kidLink(base, kid.id, kid.rawKey), parentLink: parentLink(base, root) };

@@ -20,10 +20,10 @@ describe('format (fr-BE, SPEC §13)', () => {
   });
 
   it('splits a balance into euros and cents for the big display', () => {
-    expect(f.balanceParts(289.052634)).toEqual({ euros: '289', cents: '05' });
+    expect(f.balanceParts(289.052634)).toEqual({ euros: '289', cents: '05', decimal: ',', symbolFirst: false });
     expect(nbsp(f.balanceParts(1234.999).euros)).toBe('1 235');
     expect(f.balanceParts(1234.999).cents).toBe('00');
-    expect(f.balanceParts(0.004)).toEqual({ euros: '0', cents: '00' });
+    expect(f.balanceParts(0.004)).toMatchObject({ euros: '0', cents: '00' });
   });
 
   it('formats ISO dates without shifting a day, whatever the time zone', () => {
@@ -55,6 +55,11 @@ describe('format (fr-BE, SPEC §13)', () => {
 });
 
 describe('format (en)', () => {
+  it('splits the big balance the English way: €289.05', () => {
+    expect(formatter('en').balanceParts(289.052634)).toEqual({ euros: '289', cents: '05', decimal: '.', symbolFirst: true });
+    expect(formatter('en').balanceParts(1234.5).euros).toBe('1,234');
+  });
+
   it('uses English dates and names', () => {
     const e = formatter('en');
     expect(e.dateLong('2027-04-10')).toBe('10 April 2027');
