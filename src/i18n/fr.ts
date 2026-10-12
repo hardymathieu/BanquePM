@@ -176,6 +176,13 @@ export const fr = {
     commentsPrivate: 'Les commentaires deviennent des notes privées. Tu pourras écrire ensuite des notes visibles par ton enfant.',
     pendingHint: (day: string) => `Les ${day}s sans ligne sont « à rattraper » : tu pourras tous les marquer gardés d'un coup.`,
     noRows: "Aucune ligne avec une date dans ce fichier. Vérifie qu'il a une colonne Date et une colonne Ajouté / Sorti.",
+    noRowsIn: (column: string, sample: string) =>
+      `Aucune date reconnue dans la colonne « ${column} » (par exemple « ${sample} »). Choisis la colonne des dates ci-dessous.`,
+    columnsTitle: 'Colonnes lues',
+    dateColumn: 'Dates',
+    amountColumn: 'Montants',
+    commentColumn: 'Commentaires',
+    noColumn: 'Aucune',
     badDate: (row: number, text: string) => `Ligne ${row} : la date « ${text} » n'est pas lisible (jj/mm/aaaa).`,
     badAmount: (row: number, text: string) => `Ligne ${row} : le montant « ${text} » n'est pas lisible.`,
     futureDate: (row: number, date: string) => `Ligne ${row} : la date du ${date} est dans le futur.`,

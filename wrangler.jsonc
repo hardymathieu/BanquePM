@@ -13,5 +13,10 @@
   ],
   // Log nothing: no Workers Logs, no traces, no Logpush. Never turn this on.
   "observability": { "enabled": false },
-  "logpush": false
+  "logpush": false,
+  // No Wrangler usage telemetry from builds either.
+  "send_metrics": false,
+  // Served on <name>.<account>.workers.dev; no extra public preview URL per version.
+  "workers_dev": true,
+  "preview_urls": false
 }

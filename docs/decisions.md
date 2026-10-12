@@ -151,3 +151,12 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
 - **The e2e guard** (`e2e/fixtures.ts`) wraps every test: no foreign request, no console error, no uncaught exception. It was checked with a planted external image.
 - **`npm run check:dist`** checks the build: absolute URLs allowlisted, CSP present, `sw.js` sane, gzipped size budgets (kid first-load JS ≤ 45 KiB, currently 30.9; all JS ≤ 150 KiB, currently 76.1; CSS ≤ 10 KiB, currently 4.8). It was checked with a planted Google Fonts link.
 - **Lighthouse** (`npm run lighthouse`): kid view and parent home both score accessibility 100, best practices 100, performance 100, SEO 91.
+
+## After the first real deploy (2026-10-12)
+
+- **Sheet import reads more formats.**
+  - Dates: French or English month names, with or without a weekday ("dim. 5 janv. 2025", "Sunday, January 5, 2025"), 2-digit years, a trailing time ("05/01/2025 00:00:00"), and `yyyy/mm/dd`.
+  - US order (`m/d/yyyy`) is used only when a date in that column proves it; otherwise it is day/month.
+- **Sheet columns are guessed, shown and changeable.** Headers come first, then content: the column with the most dates, then the first numeric column after it. The import shows "Colonnes lues" (dates, amounts, comments) with dropdowns, so any header names work. "No dates" now names the column and quotes a sample cell, on screen only.
+- **`wrangler.jsonc`:** `send_metrics: false` (no Wrangler usage telemetry from builds), `workers_dev: true` and `preview_urls: false` set explicitly (no extra public preview URL per version). The static test checks them.
+- **Updating a deployed copy.** The Deploy button makes a copy, not a fork, and pins the D1 `database_id` in its `wrangler.jsonc`. `scripts/update-from-upstream.sh` merges upstream (unrelated histories the first time, upstream wins conflicts) and puts the `database_id` back. The README explains it.

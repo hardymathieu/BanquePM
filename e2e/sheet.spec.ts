@@ -92,3 +92,33 @@ test('explains a row it cannot read, and a ledger that goes below zero', async (
   await expect(page.getByText(/Le solde passe sous zéro le 6 janvier 2025/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Créer la banque de Léa' })).toBeDisabled();
 });
+
+test('reads a sheet with other headers and dates in words, and lets the parent fix the columns', async ({ page }, info) => {
+  const odd = info.outputPath('odd.csv');
+  writeFileSync(
+    odd,
+    [
+      'Semaine,Quand,Pièces,Solde,Remarque',
+      '1,"dim. 5 janv. 2025","95,87 €","95,87 €",premier dépôt',
+      '2,"dim. 12 janv. 2025","2,00 €","97,87 €",',
+      '3,"mer. 15 janv. 2025","-7,50 €","90,37 €",glaces',
+    ].join('\n'),
+  );
+  await page.goto('/admin');
+  await page.getByLabel("Mot de passe d'administration (ADMIN_TOKEN)").fill(E2E_ADMIN_TOKEN);
+  await page.getByRole('button', { name: 'Créer ma banque' }).click();
+  await page.getByLabel('Prénom').fill('Léa');
+  await pickCsv(page, odd);
+  const columns = page.getByRole('group', { name: 'Colonnes lues' });
+  await expect(columns.getByLabel('Dates')).toHaveValue('1');
+  await expect(columns.getByLabel('Montants')).toHaveValue('2');
+  await expect(columns.getByLabel('Commentaires')).toHaveValue('4');
+  await expect(page.locator('.sheet-import .preview')).toContainText('3 lignes : 1 dimanche à la banque, 2 mouvements');
+
+  // A wrong choice explains itself; putting it back fixes it.
+  await columns.getByLabel('Dates').selectOption({ label: 'Semaine' });
+  await expect(page.getByText('Aucune date reconnue dans la colonne « Semaine » (par exemple « 1 »)')).toBeVisible();
+  await columns.getByLabel('Dates').selectOption({ label: 'Quand' });
+  await expect(page.locator('.sheet-import .preview')).toContainText('3 lignes');
+  await page.screenshot({ path: info.outputPath('odd-sheet.png'), fullPage: true });
+});

@@ -121,3 +121,8 @@ dialog.sheet::backdrop { background: rgba(10, 15, 30, .45); }
 .sheet-import { margin-top: 12px; }
 .sheet-import .preview p + p { margin-top: 6px; }
 form > .seg + .field { margin-top: 14px; }
+.sheet-import .columns { border: 0; padding: 0; margin: 12px 0 0; }
+.sheet-import .columns legend { font-size: 14px; color: var(--ink-2); padding: 0; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.row3 .field { margin-top: 4px; min-width: 0; }
+.row3 select { padding: 8px; font-size: 15px; }

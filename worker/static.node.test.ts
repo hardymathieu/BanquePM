@@ -17,11 +17,19 @@ describe('log nothing', () => {
     expect(offenders).toEqual([]);
   });
 
-  it('keeps observability and logpush off in wrangler.jsonc', () => {
+  it('keeps observability, logpush, wrangler telemetry and preview URLs off in wrangler.jsonc', () => {
     const text = readFileSync(join(root, 'wrangler.jsonc'), 'utf8').replace(/^\s*\/\/.*$/gm, '');
-    const config = JSON.parse(text) as { observability?: { enabled?: boolean }; logpush?: boolean; tail_consumers?: unknown };
+    const config = JSON.parse(text) as {
+      observability?: { enabled?: boolean };
+      logpush?: boolean;
+      tail_consumers?: unknown;
+      send_metrics?: boolean;
+      preview_urls?: boolean;
+    };
     expect(config.observability).toEqual({ enabled: false });
     expect(config.logpush).toBe(false);
+    expect(config.send_metrics).toBe(false);
+    expect(config.preview_urls).toBe(false);
     expect(config.tail_consumers).toBeUndefined();
   });
 

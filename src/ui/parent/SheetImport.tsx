@@ -2,7 +2,7 @@
 // read the summary, then the form saves. The file is read in the browser only.
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { randomId } from '../../crypto/random';
-import { importRows, importSummary, parseSheetCsv, type SheetError, type SheetRow } from '../../engine/importSheet';
+import { columnLabels, guessColumns, importRows, importSummary, readSheetTable, type SheetColumns, sheetRows } from '../../engine/importSheet';
 import type { IsoDate, KidDoc, Weekday } from '../../engine/types';
 import { useI18n } from '../../i18n';
 import { Rich } from '../shared/Rich';
@@ -14,13 +14,18 @@ type Props = { today: IsoDate; onReady: (kid: KidDoc | null) => void };
 export function SheetImport({ today, onReady }: Props) {
   const { t, f } = useI18n();
   const [fileName, setFileName] = useState<string | null>(null);
-  const [rows, setRows] = useState<SheetRow[] | null>(null);
-  const [error, setError] = useState<SheetError | null>(null);
+  const [table, setTable] = useState<string[][] | null>(null);
+  const [cols, setCols] = useState<SheetColumns | null>(null);
   const [amountText, setAmountText] = useState('2');
   const [weekday, setWeekday] = useState<Weekday>(0);
   const [rateText, setRateText] = useState('12');
   const allowance = parseAmount(amountText);
   const apr = parsePercent(rateText);
+
+  const read = useMemo(() => (table && cols ? sheetRows(table, cols, today) : null), [table, cols, today]);
+  const rows = read?.ok ? read.rows : null;
+  const error = read && !read.ok ? read : null;
+  const labels = useMemo(() => (table && cols ? columnLabels(table, cols.header) : []), [table, cols]);
 
   const result = useMemo(() => {
     if (!rows || allowance === null || apr === null) return null;
@@ -31,9 +36,11 @@ export function SheetImport({ today, onReady }: Props) {
   useEffect(() => onReady(result && !result.summary.overdraft ? result.kid : null), [result, onReady]);
 
   const day = f.weekdayName(weekday);
-  const errorText = (e: SheetError) =>
+  const errorText = (e: Exclude<typeof read, null | { ok: true }>) =>
     e.error === 'no_rows'
-      ? t.sheet.noRows
+      ? e.sample !== undefined && cols
+        ? t.sheet.noRowsIn(labels[cols.date] ?? '', e.sample)
+        : t.sheet.noRows
       : e.error === 'bad_date'
         ? t.sheet.badDate(e.row, e.text)
         : e.error === 'bad_amount'
@@ -54,12 +61,36 @@ export function SheetImport({ today, onReady }: Props) {
             input.value = '';
             if (!file) return;
             setFileName(file.name);
-            const res = parseSheetCsv(await file.text(), today);
-            setRows(res.ok ? res.rows : null);
-            setError(res.ok ? null : res);
+            const next = readSheetTable(await file.text());
+            setTable(next);
+            setCols(guessColumns(next));
           }}
         />
       </label>
+      {table && cols && labels.length > 0 && (
+        <fieldset class="columns">
+          <legend>{t.sheet.columnsTitle}</legend>
+          <div class="row3">
+            {(
+              [
+                ['date', t.sheet.dateColumn],
+                ['amount', t.sheet.amountColumn],
+                ['comment', t.sheet.commentColumn],
+              ] as const
+            ).map(([key, label]) => (
+              <div class="field" key={key}>
+                <label for={`sh-col-${key}`}>{label}</label>
+                <select id={`sh-col-${key}`} value={cols[key]} onChange={(e) => setCols({ ...cols, [key]: Number(e.currentTarget.value) })}>
+                  {key === 'comment' && <option value={-1}>{t.sheet.noColumn}</option>}
+                  {labels.map((name, i) => (
+                    <option key={i} value={i}>{name}</option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+        </fieldset>
+      )}
       {error && <p class="err" role="alert">{errorText(error)}</p>}
       {rows && (
         <>

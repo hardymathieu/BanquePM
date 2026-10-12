@@ -59,23 +59,101 @@ export function importRows(rows: readonly SheetRow[], opts: ImportOptions): KidD
 }
 
 export type SheetError =
-  | { ok: false; error: 'no_rows' }
+  | { ok: false; error: 'no_rows'; sample?: string }
   | { ok: false; error: 'bad_date' | 'bad_amount' | 'future_date'; row: number; text: string };
 
-const DATE_LIKE = /^\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}$|^\d{4}-\d{1,2}-\d{1,2}$/;
-const DMY = /^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/;
+export type SheetColumns = {
+  /** The header row (0-based), or -1 when there is none. */
+  header: number;
+  date: number;
+  amount: number;
+  /** -1 when there is no comment column. */
+  comment: number;
+};
 
-/** dd/mm/yyyy (also d/m, with . or -) or ISO; null if it isn't a real date. */
-function parseDate(text: string): IsoDate | null {
-  const t = text.trim();
-  const m = DMY.exec(t);
-  const iso = m ? `${m[3]}-${m[2]!.padStart(2, '0')}-${m[1]!.padStart(2, '0')}` : t;
-  return isIsoDate(iso) ? iso : null;
+type Order = 'dmy' | 'mdy';
+
+const fold = (s: string) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim();
+
+const MONTHS: Record<string, number> = {};
+[
+  ['janvier', 'janv', 'jan', 'january'],
+  ['fevrier', 'fevr', 'fev', 'feb', 'february'],
+  ['mars', 'mar', 'march'],
+  ['avril', 'avr', 'apr', 'april'],
+  ['mai', 'may'],
+  ['juin', 'jun', 'june'],
+  ['juillet', 'juil', 'jul', 'july'],
+  ['aout', 'aug', 'august'],
+  ['septembre', 'sept', 'sep', 'september'],
+  ['octobre', 'oct', 'october'],
+  ['novembre', 'nov', 'november'],
+  ['decembre', 'dec', 'december'],
+].forEach((names, i) => names.forEach((n) => (MONTHS[n] = i + 1)));
+
+const WEEKDAYS = new Set(
+  'lundi lun mardi mar mercredi mer jeudi jeu vendredi ven samedi sam dimanche dim monday mon tuesday tue wednesday wed thursday thu friday fri saturday sat sunday sun'.split(' '),
+);
+
+const NUMERIC = /^(\d{1,4})[/.-](\d{1,2})[/.-](\d{1,4})$/;
+/** A trailing time: " 00:00", " 0:00:00", "T00:00:00Z". */
+const TIME = /(?:t|\s+)\d{1,2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:z|[+-]\d{2}:?\d{2})?$/;
+
+const cleanDate = (text: string) => fold(text).replace(TIME, '').trim();
+
+function iso(y: number, m: number, d: number): IsoDate | null {
+  const v = `${String(y).padStart(4, '0')}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  return isIsoDate(v) ? v : null;
+}
+
+const fullYear = (y: string) => (y.length === 2 ? 2000 + Number(y) : Number(y));
+
+/**
+ * Dates as sheets export them: 05/01/2025, 5/1/25, 2025-01-05, 05/01/2025 00:00:00,
+ * 5 janv. 2025, dim. 5 janvier 2025, Sunday, January 5, 2025, 5-Jan-2025…
+ * `order` says how to read an ambiguous numeric date (decided per column).
+ */
+function parseDate(text: string, order: Order): IsoDate | null {
+  const t = cleanDate(text);
+  const n = NUMERIC.exec(t);
+  if (n) {
+    const [, a, b, c] = n as unknown as [string, string, string, string];
+    if (a.length === 4) return iso(Number(a), Number(b), Number(c));
+    if (c.length !== 2 && c.length !== 4) return null;
+    return order === 'mdy' ? iso(fullYear(c), Number(a), Number(b)) : iso(fullYear(c), Number(b), Number(a));
+  }
+  const tokens = t.split(/[\s.,/-]+/).filter((x) => x && !WEEKDAYS.has(x));
+  const monthAt = tokens.findIndex((x) => MONTHS[x] !== undefined);
+  const numbers = tokens.filter((x) => /^\d{1,4}$/.test(x));
+  if (monthAt < 0 || numbers.length !== 2 || tokens.length !== 3) return null;
+  const year = numbers.find((x) => x.length === 4) ?? numbers[1]!;
+  const day = numbers.find((x) => x !== year) ?? numbers[0]!;
+  return iso(fullYear(year), MONTHS[tokens[monthAt]!]!, Number(day));
+}
+
+/** Worth reading as a date (a typo in it is an error); anything else (titles, totals) is skipped. */
+function looksLikeDate(text: string): boolean {
+  const t = cleanDate(text);
+  if (!/\d/.test(t)) return false;
+  return NUMERIC.test(t) || t.split(/[\s.,/-]+/).some((x) => MONTHS[x] !== undefined);
+}
+
+/** m/d/yyyy only when the column itself proves it (a "day" above 12 in second place, never in first). */
+function columnOrder(cells: string[]): Order {
+  let dayFirst = false;
+  let monthFirst = false;
+  for (const cell of cells) {
+    const n = NUMERIC.exec(cleanDate(cell));
+    if (!n || n[1]!.length === 4) continue;
+    if (Number(n[1]) > 12) dayFirst = true;
+    if (Number(n[2]) > 12) monthFirst = true;
+  }
+  return monthFirst && !dayFirst ? 'mdy' : 'dmy';
 }
 
 /** "95,87", "12,00 €", "€ 1 234,50", "−7,50", "(1,00)", "1,234.50" → number; null if unreadable. */
 function parseAmount(text: string): number | null {
-  let t = text.replace(/[€\s\u00a0\u202f]/g, '').replace(/\u2212/g, '-');
+  let t = text.replace(/[€\s  ]/g, '').replace(/−/g, '-');
   let sign = 1;
   if (/^\(.*\)$/.test(t)) {
     sign = -1;
@@ -88,36 +166,81 @@ function parseAmount(text: string): number | null {
   return /^-?\d+(\.\d+)?$/.test(t) ? sign * Number(t) : null;
 }
 
-type Columns = { header: number; date: number; amount: number; comment: number };
+export const readSheetTable = (text: string): string[][] => parseCsv(text);
 
-function findColumns(table: string[][]): Columns {
-  for (let r = 0; r < table.length; r++) {
-    const cells = table[r]!.map((c) => c.trim().toLowerCase());
-    const date = cells.findIndex((c) => /^date\b/.test(c));
-    const amount = cells.findIndex((c) => /ajout|sorti|montant|amount/.test(c));
-    if (date >= 0 && amount >= 0) return { header: r, date, amount, comment: cells.findIndex((c) => /comment|note|remarque/.test(c)) };
+const HEADER = {
+  date: /^(date|dates|jour|day)\b/,
+  amount: /ajout|sorti|montant|amount|somme|mouvement/,
+  comment: /comment|note|remarque|libelle|description/,
+};
+
+const cell = (table: string[][], r: number, c: number) => (table[r]?.[c] ?? '').trim();
+const width = (table: string[][]) => Math.max(0, ...table.map((r) => r.length));
+
+/** Columns by header name first, then by content: the most dated column, then the first numeric one after it. */
+export function guessColumns(table: string[][]): SheetColumns {
+  const cols = width(table);
+  const named = table.findIndex((row) => row.some((c) => HEADER.date.test(fold(c))));
+  const headerCells = named >= 0 ? table[named]!.map(fold) : [];
+  const byName = (re: RegExp) => headerCells.findIndex((c) => re.test(c));
+
+  const datesIn = (c: number) => {
+    const cells = table.map((row) => row[c] ?? '');
+    const order = columnOrder(cells);
+    return cells.filter((x) => looksLikeDate(x) && parseDate(x, order) !== null).length;
+  };
+  let date = byName(HEADER.date);
+  if (date < 0 || datesIn(date) === 0) {
+    let best = 0;
+    date = 0;
+    for (let c = 0; c < cols; c++) if (datesIn(c) > best) [best, date] = [datesIn(c), c];
   }
-  return { header: -1, date: 0, amount: 1, comment: 2 };
+
+  const dateRows = table.flatMap((row, r) => (looksLikeDate(row[date] ?? '') ? [r] : []));
+  const firstData = dateRows[0] ?? -1;
+  const header = named >= 0 ? named : firstData > 0 && table[firstData - 1]!.some((c) => /\p{L}/u.test(c)) ? firstData - 1 : -1;
+  const names = header >= 0 ? table[header]!.map(fold) : [];
+
+  let amount = names.findIndex((c, i) => i !== date && HEADER.amount.test(c));
+  if (amount < 0) {
+    const numeric = (c: number) => dateRows.filter((r) => parseAmount(cell(table, r, c)) !== null).length;
+    const order = [...Array(cols).keys()].filter((c) => c !== date).sort((a, b) => Number(a < date) - Number(b < date) || a - b);
+    amount = order.find((c) => numeric(c) > 0) ?? (date === 0 ? 1 : 0);
+  }
+  const comment = names.findIndex((c, i) => i !== date && i !== amount && HEADER.comment.test(c));
+  return { header, date, amount, comment };
 }
 
-/** The exported sheet → dated rows (row numbers in errors are 1-based file lines). */
-export function parseSheetCsv(text: string, today: IsoDate): { ok: true; rows: SheetRow[] } | SheetError {
-  const table = parseCsv(text);
-  const cols = findColumns(table);
+/** Header names for the column picker, or A, B, C… */
+export function columnLabels(table: string[][], header: number): string[] {
+  return Array.from({ length: width(table) }, (_, c) => (header >= 0 && cell(table, header, c)) || String.fromCharCode(65 + (c % 26)));
+}
+
+/** Dated rows from chosen columns (row numbers in errors are 1-based file lines). */
+export function sheetRows(table: string[][], cols: SheetColumns, today: IsoDate): { ok: true; rows: SheetRow[] } | SheetError {
+  const body = table.slice(cols.header + 1);
+  const order = columnOrder(body.map((row) => row[cols.date] ?? ''));
   const rows: SheetRow[] = [];
   for (let r = cols.header + 1; r < table.length; r++) {
-    const cells = table[r]!;
-    const dateText = (cells[cols.date] ?? '').trim();
-    const amountText = (cells[cols.amount] ?? '').trim();
-    if (!DATE_LIKE.test(dateText)) continue; // titles, totals, blank lines
-    const date = parseDate(dateText);
+    const dateText = cell(table, r, cols.date);
+    const amountText = cell(table, r, cols.amount);
+    if (!looksLikeDate(dateText)) continue; // titles, totals, blank lines
+    const date = parseDate(dateText, order);
     if (!date) return { ok: false, error: 'bad_date', row: r + 1, text: dateText };
     if (date > today) return { ok: false, error: 'future_date', row: r + 1, text: date };
     const amount = amountText === '' ? null : parseAmount(amountText);
     if (amountText !== '' && amount === null) return { ok: false, error: 'bad_amount', row: r + 1, text: amountText };
-    rows.push({ date, amount, comment: cols.comment >= 0 ? (cells[cols.comment] ?? '').trim() : '' });
+    rows.push({ date, amount, comment: cols.comment >= 0 ? cell(table, r, cols.comment) : '' });
   }
-  return rows.length ? { ok: true, rows } : { ok: false, error: 'no_rows' };
+  if (rows.length) return { ok: true, rows };
+  const sample = body.map((row) => (row[cols.date] ?? '').trim()).find(Boolean);
+  return sample === undefined ? { ok: false, error: 'no_rows' } : { ok: false, error: 'no_rows', sample };
+}
+
+/** The exported sheet → dated rows, with the columns guessed. */
+export function parseSheetCsv(text: string, today: IsoDate): { ok: true; rows: SheetRow[] } | SheetError {
+  const table = readSheetTable(text);
+  return sheetRows(table, guessColumns(table), today);
 }
 
 export type ImportSummary = {

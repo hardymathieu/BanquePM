@@ -35,7 +35,15 @@ Tu as déjà un tableau Google Sheets ? À la création, choisis **Depuis un tab
 
 ### Mises à jour
 
-Ta copie ne se met pas à jour toute seule. Pour récupérer les nouveautés, synchronise ton dépôt GitHub avec celui-ci (bouton **Sync fork** sur GitHub, ou `git pull` depuis ce dépôt), et Cloudflare republie. L'API reste compatible `/api/v1` : une nouvelle version lit toujours les banques existantes.
+Le bouton Deploy crée une **copie** de ce dépôt dans ton GitHub (pas un fork), et y inscrit l'identifiant de ta base de données (`database_id` dans `wrangler.jsonc`). Ta copie ne se met pas à jour toute seule. Pour récupérer les nouveautés :
+
+```
+git clone https://github.com/<toi>/<ta-copie>.git && cd <ta-copie>
+./scripts/update-from-upstream.sh   # fusionne ce dépôt-ci en gardant ton database_id
+git push                            # Cloudflare reconstruit et republie
+```
+
+Ne supprime jamais la ligne `database_id` : sans elle, un déploiement pourrait créer une nouvelle base vide. L'API reste compatible `/api/v1` : une nouvelle version lit toujours les banques existantes.
 
 ---
 
@@ -45,7 +53,7 @@ A free, open-source virtual savings account that parents run for their kids. Poc
 
 **The promise: whoever hosts it can know nothing.** No accounts, no e-mails, no passwords, no logs, no analytics, no third-party requests. Everything is end-to-end encrypted in the browser; the server stores only blobs it cannot read. A secret link opens the bank and 12 recovery words restore it. Lose both (and your backups) and nobody can recover it, by design.
 
-**Deploy your own:** click **Deploy to Cloudflare** above, set `ADMIN_TOKEN` to a random password of 32+ characters, open `/admin`, then *Créer ma banque* for your family or *Créer une invitation* for a friend's. Optional `INSTANCE_CONTACT` shows a contact on the privacy page. To update, sync your fork with this repository; the API stays `/api/v1`-compatible.
+**Deploy your own:** click **Deploy to Cloudflare** above, set `ADMIN_TOKEN` to a random password of 32+ characters, open `/admin`, then *Créer ma banque* for your family or *Créer une invitation* for a friend's. Optional `INSTANCE_CONTACT` shows a contact on the privacy page. The button makes a *copy* (not a fork) holding your D1 `database_id`; to update it, run `./scripts/update-from-upstream.sh` in your copy, then `git push`. Never drop the `database_id` line. The API stays `/api/v1`-compatible.
 
 ## Development
 

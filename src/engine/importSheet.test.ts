@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import rows from '../../fixtures/sheet-a.json';
 import { sheetA, TODAY } from './__fixtures__/sheetA';
-import { importRows, importSummary, parseSheetCsv } from './importSheet';
+import { columnLabels, guessColumns, importRows, importSummary, parseSheetCsv, readSheetTable, sheetRows } from './importSheet';
 
 let n = 0;
 const newId = () => `id${++n}`;
@@ -172,8 +172,8 @@ describe('parseSheetCsv (SPEC §12)', () => {
   });
 
   it('refuses a file with no dated row', () => {
-    expect(parseSheetCsv('Date,Ajouté / Sorti\nTotal,"1,00"', TODAY)).toEqual({ ok: false, error: 'no_rows' });
-    expect(parseSheetCsv('', TODAY)).toEqual({ ok: false, error: 'no_rows' });
+    expect(parseSheetCsv('Date,Ajouté / Sorti\nTotal,"1,00"', TODAY)).toMatchObject({ ok: false, error: 'no_rows' });
+    expect(parseSheetCsv('', TODAY)).toMatchObject({ ok: false, error: 'no_rows' });
   });
 
   it('reports a ledger that goes below zero, with the date', () => {
@@ -181,5 +181,86 @@ describe('parseSheetCsv (SPEC §12)', () => {
     if (!res.ok) throw new Error(res.error);
     const doc = importRows(res.rows, { name: 'Léa', birthday: null, newId: () => 'x' + Math.random() });
     expect(importSummary(res.rows, doc, TODAY).overdraft?.date).toBe('2025-01-06');
+  });
+});
+
+describe('sheet dates in other formats', () => {
+  const one = (date: string) => parseSheetCsv(`Date,Ajouté / Sorti\n${date},"1,00"`, TODAY);
+  it.each([
+    ['5 janv. 2025'],
+    ['5 janvier 2025'],
+    ['dim. 5 janv. 2025'],
+    ['dimanche 5 janvier 2025'],
+    ['05/01/25'],
+    ['05/01/2025 00:00:00'],
+    ['05/01/2025 0:00'],
+    ['2025-01-05T00:00:00'],
+    ['2025/01/05'],
+    ['Sunday, January 5, 2025'],
+    ['Jan 5, 2025'],
+    ['5-Jan-2025'],
+    ['5 févr. 2025'.replace('févr.', 'janv.')],
+  ])('reads %j as 2025-01-05', (text) => {
+    const res = one(`"${text}"`);
+    expect(res.ok && res.rows[0]!.date).toBe('2025-01-05');
+  });
+
+  it('reads French month names with or without accents', () => {
+    for (const text of ['3 févr. 2025', '3 fevrier 2025', '3 février 2025', '3 FÉVR 2025']) {
+      const res = one(`"${text}"`);
+      expect(res.ok && res.rows[0]!.date).toBe('2025-02-03');
+    }
+    for (const [text, iso] of [['1 août 2025', '2025-08-01'], ['1 déc. 2025', '2025-12-01'], ['1 juil. 2025', '2025-07-01']]) {
+      const res = one(`"${text}"`);
+      expect(res.ok && res.rows[0]!.date).toBe(iso);
+    }
+  });
+
+  it('reads a US-ordered column (m/d/yyyy) when one of its dates says so', () => {
+    const res = parseSheetCsv('Date,Ajouté / Sorti\n1/5/2025,"1,00"\n1/19/2025,"2,00"', TODAY);
+    expect(res.ok && res.rows.map((r) => r.date)).toEqual(['2025-01-05', '2025-01-19']);
+  });
+
+  it('keeps day/month order for an ambiguous French column', () => {
+    const res = parseSheetCsv('Date,Ajouté / Sorti\n05/01/2025,"1,00"\n13/01/2025,"2,00"', TODAY);
+    expect(res.ok && res.rows.map((r) => r.date)).toEqual(['2025-01-05', '2025-01-13']);
+  });
+});
+
+describe('sheet columns', () => {
+  it('finds the date and amount columns from the content when headers are unknown', () => {
+    const csv = 'Semaine,Quand,Pièces,Solde,Remarque\n1,05/01/2025,"95,87","95,87",premier\n2,12/01/2025,"-1,00","94,87",\n';
+    const table = readSheetTable(csv);
+    const cols = guessColumns(table);
+    expect(cols.date).toBe(1);
+    expect(cols.amount).toBe(2);
+    expect(cols.header).toBe(0);
+    const res = sheetRows(table, cols, TODAY);
+    expect(res.ok && res.rows.map((r) => [r.date, r.amount])).toEqual([
+      ['2025-01-05', 95.87],
+      ['2025-01-12', -1],
+    ]);
+  });
+
+  it('prefers a recognised amount header over the first numeric column', () => {
+    const table = readSheetTable('Date,Solde,Ajouté / Sorti,Commentaire\n05/01/2025,"10,00","10,00",x\n12/01/2025,"8,00","-2,00",');
+    expect(guessColumns(table)).toEqual({ header: 0, date: 0, amount: 2, comment: 3 });
+  });
+
+  it('honours columns chosen by hand', () => {
+    const table = readSheetTable('A,B,C\n05/01/2025,"10,00","3,00"\n');
+    const res = sheetRows(table, { header: 0, date: 0, amount: 2, comment: -1 }, TODAY);
+    expect(res.ok && res.rows[0]!.amount).toBe(3);
+  });
+
+  it('describes the columns for the picker, with their headers', () => {
+    const table = readSheetTable('Date,Ajouté / Sorti\n05/01/2025,"1,00"');
+    expect(columnLabels(table, 0)).toEqual(['Date', 'Ajouté / Sorti']);
+    expect(columnLabels(readSheetTable('05/01/2025,"1,00"'), -1)).toEqual(['A', 'B']);
+  });
+
+  it('says which column had no date, with a sample cell', () => {
+    const table = readSheetTable('Date,Ajouté / Sorti\nhello,"1,00"\n');
+    expect(sheetRows(table, { header: 0, date: 1, amount: 0, comment: -1 }, TODAY)).toEqual({ ok: false, error: 'no_rows', sample: '1,00' });
   });
 });
