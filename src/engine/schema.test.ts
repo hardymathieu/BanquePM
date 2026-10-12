@@ -3,11 +3,12 @@ import { sheetA } from './__fixtures__/sheetA';
 import { projectForKid } from './project';
 import { parseFamilyDoc, parseKidPublicDoc } from './schema';
 
-const good = () => JSON.parse(JSON.stringify(projectForKid(sheetA(), '2026-10-10'))) as Record<string, any>;
+const good = () => JSON.parse(JSON.stringify(projectForKid(sheetA(), '2026-10-10', 'fr'))) as Record<string, any>;
 
 describe('parseKidPublicDoc', () => {
   it('accepts a projected kid doc', () => {
     expect(parseKidPublicDoc(good())).toEqual(good());
+    expect(good().locale).toBe('fr');
   });
 
   it('ignores unknown extra fields, so a newer v1 writer stays readable', () => {
@@ -93,5 +94,15 @@ describe('parseFamilyDoc, recovery', () => {
     expect(parseFamilyDoc({ ...base, recovery: { confirmedOn: null } })).not.toBeNull();
     expect(parseFamilyDoc({ ...base, recovery: { confirmedOn: '2026-10-10' } })).not.toBeNull();
     expect(parseFamilyDoc({ ...base, recovery: { confirmedOn: 'yes' } })).toBeNull();
+  });
+});
+
+describe('parseKidPublicDoc, locale', () => {
+  it('accepts a kid doc with or without a locale, and refuses an unknown one', () => {
+    const doc = JSON.parse(JSON.stringify(projectForKid(sheetA(), '2026-10-10', 'fr'))) as Record<string, unknown>;
+    expect(parseKidPublicDoc(doc)?.locale).toBe('fr');
+    const { locale: _, ...older } = doc;
+    expect(parseKidPublicDoc(older)).not.toBeNull();
+    expect(parseKidPublicDoc({ ...doc, locale: 'de' })).toBeNull();
   });
 });

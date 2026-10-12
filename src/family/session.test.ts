@@ -192,3 +192,15 @@ describe('backups and deletion (SPEC §4.3, §9.5, §11)', () => {
     expect(server.rows.size).toBe(0);
   });
 });
+
+describe('language', () => {
+  it('republishes kid blobs when the family language changes', async () => {
+    const { server, root, session } = await setup();
+    await session.save(deposit('m1'), TODAY);
+    expect((await kidBlob(server, root, 0))?.locale).toBe('fr');
+    server.log.length = 0;
+    await session.save((f) => ({ ...f, prefs: { locale: 'en' } }), TODAY, { count: false });
+    expect(server.log.map((l) => l.split(' ')[0])).toEqual(['PUT', 'PUT']);
+    expect((await kidBlob(server, root, 0))?.locale).toBe('en');
+  });
+});

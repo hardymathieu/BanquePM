@@ -49,3 +49,10 @@ describe('projectForKid (SPEC §4.2)', () => {
     expect(p.kid.allowance).not.toBe(doc.allowance);
   });
 });
+
+describe('the family language travels to the kid (parent setting, not the kid device)', () => {
+  it('copies the locale into the kid blob', () => {
+    expect(projectForKid(sheetA(), '2026-10-10', 'en').locale).toBe('en');
+    expect(projectForKid(sheetA(), '2026-10-10', 'fr').locale).toBe('fr');
+  });
+});

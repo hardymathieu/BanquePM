@@ -8,7 +8,7 @@ import { confirmRecovery, newFamily, newKidDoc } from '../../engine/family';
 import { isIsoDate } from '../../engine/dates';
 import type { ExportFile, KidDoc, Weekday } from '../../engine/types';
 import { FamilySession } from '../../family/session';
-import { deviceLocale, useI18n } from '../../i18n';
+import { useI18n } from '../../i18n';
 import { formatInviteCode, normalizeInviteCode } from '../../inviteCode';
 import { setParent } from '../../store/device';
 import { useNav } from '../nav';
@@ -29,7 +29,8 @@ function Create({ invite, adminToken, fromBackup }: Props) {
   const { t, f } = useI18n();
   const go = useNav();
   const today = localToday();
-  const locale = fromBackup?.family.prefs.locale ?? deviceLocale();
+  // French first; the parent can switch to English in Réglages.
+  const locale = fromBackup?.family.prefs.locale ?? 'fr';
   const [step, setStep] = useState<Step>({ at: 'form' });
   const [root] = useState(generateRoot);
   const [code, setCode] = useState(invite ?? '');

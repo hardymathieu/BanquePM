@@ -162,3 +162,8 @@ The spec (SPEC.md, kept outside the repo) is the source of truth, **except where
 - **Updating a deployed copy.** The Deploy button makes a copy, not a fork, and pins the D1 `database_id` in its `wrangler.jsonc`. `scripts/update-from-upstream.sh` merges upstream (unrelated histories the first time, upstream wins conflicts) and puts the `database_id` back. The README explains it.
 - **Rows dated after today are left out of a sheet import, not refused.** A sheet planned ahead is normal. The summary says how many were set aside ("N lignes datées après aujourd'hui sont laissées de côté : seul le passé est importé."). A sheet with only future rows gets the generic "no dated row" message.
 - **"01/Mar/2025":** "mar" is both *mars* and *mardi*. The month is picked first (a word that can only be a month wins), then leftover weekday words are ignored.
+- **Language is the family's choice, not the phone's (amends SPEC §15).**
+  - "Langue / Language" in Réglages sets `FamilyDoc.prefs.locale` for the parent app and every kid page.
+  - The kid blob carries it as an optional `locale` (additive v1; older blobs mean French). Changing it republishes the kid blobs (it is part of the session's republish key) and does not count as a backup change.
+  - Everything else (landing, onboarding, admin, picker, privacy page, new families) is French by default: French first, English partial.
+  - The recovery words follow the family language when displayed. The same 12 words exist in both lists, and restoring accepts either, so a card printed in one language stays valid after switching.

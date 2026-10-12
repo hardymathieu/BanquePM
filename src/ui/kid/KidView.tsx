@@ -1,6 +1,6 @@
 // Page: one kid's read-only bank. No buttons that change data (SPEC §8).
 import { useEffect } from 'preact/hooks';
-import { useI18n } from '../../i18n';
+import { I18nContext, i18nFor, useI18n } from '../../i18n';
 import { getKids } from '../../store/device';
 import { useNav } from '../nav';
 import { KidScreen } from './KidScreen';
@@ -13,7 +13,7 @@ export default function KidView({ id, rawKey, remember }: { id: string; rawKey: 
   const several = remember && getKids().length > 1;
 
   useEffect(() => {
-    document.title = state.status === 'ready' ? t.kid.title(state.doc.kid.name) : t.app.name;
+    document.title = state.status === 'ready' ? i18nFor(state.doc.locale ?? 'fr').t.kid.title(state.doc.kid.name) : t.app.name;
   }, [state, t]);
 
   switch (state.status) {
@@ -29,6 +29,11 @@ export default function KidView({ id, rawKey, remember }: { id: string; rawKey: 
         </main>
       );
     case 'ready':
-      return <KidScreen doc={state.doc} today={state.today} staleSince={state.staleSince} onSwitchKid={several ? () => go({ page: 'picker' }) : undefined} />;
+      // The language the parent chose for the family, carried in the kid blob; not the kid's phone setting.
+      return (
+        <I18nContext.Provider value={i18nFor(state.doc.locale ?? 'fr')}>
+          <KidScreen doc={state.doc} today={state.today} staleSince={state.staleSince} onSwitchKid={several ? () => go({ page: 'picker' }) : undefined} />
+        </I18nContext.Provider>
+      );
   }
 }

@@ -6,10 +6,11 @@ import { allowanceOn } from '../../engine/schedule';
 import type { Weekday } from '../../engine/types';
 import { checkAllowanceChange, checkRateChange, type DatedChangeProblem } from '../../engine/validate';
 import { ChangeRejected } from '../../family/session';
-import { useI18n } from '../../i18n';
+import { i18nFor, type Locale, useI18n } from '../../i18n';
 import { forgetDevice } from '../../store/device';
 import { Sheet } from '../shared/Sheet';
 import { ConfirmDelete } from './ConfirmDelete';
+import { Segmented } from '../shared/Segmented';
 import { useToast } from '../shared/Toast';
 import { type KidCtx, onKid } from './kidContext';
 import { nextScheduled, parseAmount, parsePercent } from './model';
@@ -19,7 +20,7 @@ type Panel = null | 'kid' | 'allowance' | 'rate' | 'forget' | 'delete-kid' | 'de
 
 type Danger = { download: () => Promise<void>; deleteKid: () => Promise<void>; deleteAll: () => Promise<void> };
 
-export function Settings({ ctx, danger }: { ctx: KidCtx; danger: Danger }) {
+export function Settings({ ctx, danger, locale }: { ctx: KidCtx; danger: Danger; locale: Locale }) {
   const { t, f } = useI18n();
   const toast = useToast();
   const { doc, today } = ctx;
@@ -32,6 +33,23 @@ export function Settings({ ctx, danger }: { ctx: KidCtx; danger: Danger }) {
     <section>
       <details class="card fold">
         <summary>{t.parent.settingsTitle}</summary>
+        <div class="language">
+          <p class="lbl" id="lang-label">{t.parent.languageLabel}</p>
+          <Segmented
+            label={t.parent.languageLabel}
+            value={locale}
+            onChange={async (next) => {
+              if (next === locale) return;
+              const res = await ctx.save((f) => ({ ...f, prefs: { ...f.prefs, locale: next } }), { count: false });
+              if (ctx.report(res)) toast(i18nFor(next).t.parent.toastLanguage);
+            }}
+            options={[
+              { value: 'fr', label: 'Français', class: 'dep' },
+              { value: 'en', label: 'English', class: 'dep' },
+            ]}
+          />
+          <p class="hint">{t.parent.languageHint}</p>
+        </div>
         <dl class="kv">
           <dt>{t.parent.nameLabel}</dt>
           <dd>{doc.name}</dd>

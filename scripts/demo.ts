@@ -55,7 +55,7 @@ export async function createDemoBank(base: string, adminToken: string, today: Is
   await post(base, { id: family.id, writeHash: family.writeHash, ct: toBase64url(await seal(family.key, family.id, familyDoc)) }, { 'X-Invite': adminToken });
   await post(
     base,
-    { id: kid.id, writeHash: kid.writeHash, ct: toBase64url(await seal(kid.key, kid.id, projectForKid(doc, today))) },
+    { id: kid.id, writeHash: kid.writeHash, ct: toBase64url(await seal(kid.key, kid.id, projectForKid(doc, today, 'fr'))) },
     { 'X-Parent-Id': family.id, Authorization: `Bearer ${family.writeToken}` },
   );
   return { root, doc, kidId: kid.id, kidToken: kid.writeToken, kidLink: kidLink(base, kid.id, kid.rawKey), parentLink: parentLink(base, root) };

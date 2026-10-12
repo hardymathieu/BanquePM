@@ -39,6 +39,7 @@ export function isLedger(v: unknown, isMove: (m: unknown) => boolean = isKidMove
 
 export function parseKidPublicDoc(v: unknown): KidPublicDoc | null {
   if (!isObj(v) || v.format !== 'bpm-kid' || v.v !== 1 || !isIsoDate(v.publishedOn) || !isLedger(v.kid)) return null;
+  if (v.locale !== undefined && v.locale !== 'fr' && v.locale !== 'en') return null;
   return v as KidPublicDoc;
 }
 

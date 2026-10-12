@@ -45,10 +45,14 @@ export type FamilyDoc = {
 
 export type KidMove = Omit<Move, 'privateNote'>;
 
+export type Locale = 'fr' | 'en';
+
 export type KidPublicDoc = {
   format: 'bpm-kid';
   v: 1;
   publishedOn: IsoDate;
+  /** The family's language, chosen by the parent (absent in older blobs: French). */
+  locale?: Locale;
   kid: Omit<KidDoc, 'moves'> & { moves: KidMove[] };
 };
 

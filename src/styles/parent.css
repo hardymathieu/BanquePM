@@ -126,3 +126,5 @@ form > .seg + .field { margin-top: 14px; }
 .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .row3 .field { margin-top: 4px; min-width: 0; }
 .row3 select { padding: 8px; font-size: 15px; }
+.language { margin-top: 12px; }
+.language .lbl { color: var(--ink-2); margin: 0 0 6px; }

@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'preact/compat';
 import { useEffect, useState } from 'preact/hooks';
-import { I18nContext, deviceLocale, i18nFor } from '../i18n';
+import { I18nContext, i18nFor } from '../i18n';
 import { PATHS, type Route, route as routeFor } from '../router';
 import { getKids } from '../store/device';
 import KidView from './kid/KidView';
@@ -40,7 +40,8 @@ function Page({ route }: { route: Route }) {
 }
 
 export function App({ route: initial }: { route: Route }) {
-  const i18n = i18nFor(deviceLocale());
+  // French first (SPEC §1.7). Once a family is known, its own language setting takes over.
+  const i18n = i18nFor('fr');
   const [route, setRoute] = useState(initial);
 
   useEffect(() => {

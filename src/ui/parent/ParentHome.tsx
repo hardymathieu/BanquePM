@@ -138,7 +138,7 @@ export function ParentHome({ family, session, save, revoke, act, reload }: Props
             </div>
           </section>
           <History key={`h${kid.slot}`} ctx={ctx} />
-          <Settings key={`s${kid.slot}`} ctx={ctx} danger={danger!} />
+          <Settings key={`s${kid.slot}`} ctx={ctx} danger={danger!} locale={family.prefs.locale} />
           <div id="sharing">
             <Sharing
               key={`l${kid.slot}`}

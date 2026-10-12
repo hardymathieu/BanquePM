@@ -46,7 +46,7 @@ export default function BackupViewer({ file }: { file: ExportFile | null }) {
             />
           </div>
           {view === 'kid' ? (
-            <KidScreen doc={projectForKid(kid.doc, file.exportedOn)} today={today} staleSince={null} embedded />
+            <KidScreen doc={projectForKid(kid.doc, file.exportedOn, file.family.prefs.locale)} today={today} staleSince={null} embedded />
           ) : (
             <>
               <div class="sum">

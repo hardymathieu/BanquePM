@@ -40,7 +40,8 @@ async function load(keys: BlobKeys, api: Api): Promise<Loaded> {
 }
 
 const writeError = (e: client.ApiError): SaveError => (e === 'network' || e === 'too_large' ? e : 'server');
-const projectionKey = (doc: KidDoc) => JSON.stringify(projectForKid(doc, '').kid);
+/** What a kid blob shows, minus the publish date: when it changes, the blob is rewritten. */
+const projectionKey = (doc: KidDoc, locale: FamilyDoc['prefs']['locale']) => JSON.stringify([locale, projectForKid(doc, '').kid]);
 
 export class FamilySession {
   private kidKeys = new Map<number, Promise<KidKeys>>();
@@ -132,7 +133,7 @@ export class FamilySession {
   /** Brings every kid blob in line with the family. A failed kid write is retried at the next save. */
   async publishAll(today: IsoDate): Promise<void> {
     for (const { slot, doc } of this.family.kids) {
-      const key = projectionKey(doc);
+      const key = projectionKey(doc, this.family.prefs.locale);
       if (this.published.get(slot) === key) continue;
       if (await this.publishKid(slot, doc, today)) this.published.set(slot, key);
     }
@@ -140,7 +141,7 @@ export class FamilySession {
 
   private async publishKid(slot: number, doc: KidDoc, today: IsoDate): Promise<boolean> {
     const k = await this.kid(slot);
-    const ct = toBase64url(await seal(k.key, k.id, projectForKid(doc, today)));
+    const ct = toBase64url(await seal(k.key, k.id, projectForKid(doc, today, this.family.prefs.locale)));
     const create = () => this.api.postBlob({ id: k.id, writeHash: k.writeHash, ct }, { parentId: this.keys.id, familyToken: this.keys.writeToken });
     if (this.newSlots.has(slot)) {
       const created = await create();
