@@ -2,7 +2,7 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/hardymathieu/BanquePM)
 
-*English below.* · **[Le guide complet](docs/guide/index.html)** (demander une invitation, installer, créer la banque de ton enfant, ce que voient les enfants)
+*English below.* · **[Le guide complet](https://hardymathieu.github.io/BanquePM/guide/)** (demander une invitation, installer, créer la banque de ton enfant, ce que voient les enfants)
 
 Une tirelire virtuelle, libre et gratuite, que les parents tiennent pour leurs enfants. L'argent de poche peut aller à la banque de papa et maman, la banque paie des intérêts généreux pour apprendre, et l'enfant regarde son argent grandir sur une page à lui, en lecture seule.
 
@@ -18,7 +18,7 @@ Le détail est sur la page `/confidentialite` de chaque banque.
 
 ## Le guide
 
-Un petit site, dans ce dépôt : [`docs/guide/`](docs/guide/index.html). Ouvre `docs/guide/index.html` dans ton navigateur, ou publie le dossier `docs/` avec GitHub Pages.
+En ligne : **https://hardymathieu.github.io/BanquePM/guide/** (publié par GitHub Pages depuis le dossier [`docs/guide/`](docs/guide/index.html) de ce dépôt ; il s'ouvre aussi directement depuis une copie locale).
 
 1. [Demander une invitation](docs/guide/invitation.html)
 2. [Installer ta propre banque](docs/guide/installer.html)
@@ -62,7 +62,7 @@ A free, open-source virtual savings account that parents run for their kids. Poc
 
 **The promise: whoever hosts it can know nothing.** No accounts, no e-mails, no passwords, no logs, no analytics, no third-party requests. Everything is end-to-end encrypted in the browser; the server stores only blobs it cannot read. A secret link opens the bank and 12 recovery words restore it. Lose both (and your backups) and nobody can recover it, by design.
 
-**Guide** (in French): [`docs/guide/`](docs/guide/index.html).
+**Guide** (in French): https://hardymathieu.github.io/BanquePM/guide/ (source in [`docs/guide/`](docs/guide/index.html)).
 
 **Deploy your own:** click **Deploy to Cloudflare** above, set `ADMIN_TOKEN` to a random password of 32+ characters, open `/admin`, then *Créer ma banque* for your family or *Créer une invitation* for a friend's. Optional `INSTANCE_CONTACT` shows a contact on the privacy page. The button makes a *copy* (not a fork) holding your D1 `database_id`; to update it, run `./scripts/update-from-upstream.sh` in your copy, then `git push`. Never drop the `database_id` line. The API stays `/api/v1`-compatible.
 
