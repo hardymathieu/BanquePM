@@ -22,7 +22,8 @@
     "lighthouse": "tsx scripts/lighthouse.ts",
     "check:dist": "vite build && node scripts/check-dist.mjs",
     "verify": "npm run typecheck && npm test && npm run check:dist && npm run e2e",
-    "doc:screenshots": "tsx scripts/doc-screenshots.ts"
+    "doc:screenshots": "tsx scripts/doc-screenshots.ts",
+    "explainer": "node scripts/record-explainer.mjs"
   },
   "cloudflare": {
     "bindings": {

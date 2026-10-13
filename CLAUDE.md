@@ -48,6 +48,7 @@ npm run check:dist   # build + no foreign URLs, CSP present, service worker sane
 npm run lighthouse   # Lighthouse scores for the kid view and parent home (demo bank)
 npm run verify       # typecheck + unit + check:dist + e2e: run before saying anything is done
 npm run doc:screenshots  # re-take docs/guide/img/*.jpg from the demo bank after a UI change
+npm run explainer        # re-record docs/explainer/*.mp4 and *.webp (needs ffmpeg) after the guide screenshots change
 python3 fixtures/engine_reference.py   # prints the reference test vectors
 ```
 

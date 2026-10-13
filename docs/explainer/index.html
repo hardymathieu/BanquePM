@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>En 90 secondes · Banque de papa et maman</title>
+  <meta name="description" content="Une vidéo de 90 secondes : pourquoi la Banque de papa et maman aide les enfants à comprendre les intérêts composés, comment l'installer, ce que font les parents et ce que voient les enfants.">
+  <link rel="icon" href="../guide/img/icon.png">
+  <link rel="stylesheet" href="explainer.css">
+</head>
+<body>
+  <main>
+    <h1 class="sr-title">Banque de papa et maman, en 90 secondes</h1>
+    <div class="player" id="player">
+      <div class="stage" id="stage" role="img" aria-label="Vidéo explicative animée. La transcription complète est sous la vidéo."></div>
+    </div>
+    <div class="controls" id="controls">
+      <button type="button" id="play" aria-label="Lecture">▶</button>
+      <input type="range" id="seek" min="0" max="1000" value="0" aria-label="Position dans la vidéo">
+      <span id="time">0:00</span>
+    </div>
+    <p class="links">
+      <a href="../guide/">Le guide complet</a> · <a href="../guide/en/">The full guide (English)</a> ·
+      <a href="banque-explainer.mp4" download>Télécharger la vidéo (MP4)</a> ·
+      <a href="https://github.com/hardymathieu/BanquePM">Code source</a>
+    </p>
+    <section class="transcript" aria-labelledby="h-transcript">
+      <h2 id="h-transcript">Transcription / Transcript</h2>
+      <ol id="transcript"></ol>
+    </section>
+    <noscript><p>Cette vidéo est animée en JavaScript. La version enregistrée : <a href="banque-explainer.mp4">banque-explainer.mp4</a>.</p></noscript>
+  </main>
+  <script src="explainer.js"></script>
+</body>
+</html>

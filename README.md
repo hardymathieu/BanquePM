@@ -2,6 +2,10 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/hardymathieu/BanquePM)
 
+[![La Banque de papa et maman en 90 secondes : pourquoi, installer, les parents, les enfants · Mum and dad's bank in 90 seconds](docs/explainer/banque-explainer.webp)](https://hardymathieu.github.io/BanquePM/explainer/)
+
+**▶ [La vidéo en 90 secondes](https://hardymathieu.github.io/BanquePM/explainer/)** (avec lecture, pause et transcription · *with play, pause and transcript*) · [MP4](docs/explainer/banque-explainer.mp4) · sous-titres français et anglais, sans son · *French and English subtitles, no sound*
+
 *English below.* · **[Le guide complet](https://hardymathieu.github.io/BanquePM/guide/)** (demander une invitation, installer, créer la banque de ton enfant, ce que voient les enfants)
 
 Une tirelire virtuelle, libre et gratuite, que les parents tiennent pour leurs enfants. L'argent de poche peut aller à la banque de papa et maman, la banque paie des intérêts généreux pour apprendre, et l'enfant regarde son argent grandir sur une page à lui, en lecture seule.
